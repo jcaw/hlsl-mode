@@ -182,15 +182,15 @@ Also returns a flat capitalized version, e.g:
 
 Returns a flattened list of all the resultant strings (without
 duplicates)."
-    (apply 'append (mapcar (lambda (s)
-                             (if (= 0 (length s))
-                                 s
-                               (delete-dups
-                                (list s (downcase s) (upcase s)
-                                      ;;
-                                      (concat (upcase (substring s 0 1))
-                                              (downcase (substring s 1)))))))
-                           strings)))
+    (apply #'append (mapcar (lambda (s)
+                              (if (= 0 (length s))
+                                  s
+                                (delete-dups
+                                 (list s (downcase s) (upcase s)
+                                       ;;
+                                       (concat (upcase (substring s 0 1))
+                                               (downcase (substring s 1)))))))
+                            strings)))
 
   ;; These vars are useful for completion so keep them around after
   ;; compile as well. The goal here is to have the byte compiled code
