@@ -513,5 +513,8 @@ are added to the `hlsl-builtin-list' and are fontified using the
   )
 
 
+;; TODO: Float number highlighting (i.e. 1.0f)
+
+
 (provide 'hlsl-mode)
 ;;; hlsl-mode.el ends here
