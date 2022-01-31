@@ -437,6 +437,8 @@ duplicates)."
       "__LINE__" "__FILE__" "__VERSION__"
       ))
 
+  ;; TODO: Highlighting for annotations   <int something=27;>
+
   ) ; eval-and-compile
 
 (eval-and-compile
