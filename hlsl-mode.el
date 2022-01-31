@@ -284,7 +284,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
       ;; Unity keywords
       ;;
       ;; TODO: Separate derived mode for Unity ".shader" files? They're not strictly HLSL.
-      "Shader" "Properties" "SubShader" "Tags" "Pass"
+      "Shader" "Properties" "SubShader" "Tags" "Pass" "CGPROGRAM" "ENDCG"
 
       ;; Taken directly from glsl-mode - not audited yet
       "break" "continue" "do" "for" "while" "if" "else" "subroutine"
