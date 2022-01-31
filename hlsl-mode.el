@@ -189,19 +189,40 @@ are added to the `hlsl-builtin-list' and are fontified using the
                             ("\\.compute\\'" . hlsl-mode))))
 
 (eval-and-compile
+  (defun hlsl--mixed-case (strings)
+    "Get original `strings', plus lowercase and uppercase versions.
+
+Also returns a flat capitalized version, e.g:
+  \"TexCoord\" -> \"Texcoord\"
+
+Returns a flattened list of all the resultant strings (without
+duplicates)."
+    (apply 'append (mapcar (lambda (s)
+                             (if (= 0 (length s))
+                                 s
+                               (delete-dups
+                                (list s (downcase s) (upcase s)
+                                      ;;
+                                      (concat (upcase (substring s 0 1))
+                                              (downcase (substring s 1)))))))
+                           strings)))
+
   ;; These vars are useful for completion so keep them around after
   ;; compile as well. The goal here is to have the byte compiled code
   ;; have optimized regexps so its not done at eval time.
   (defvar hlsl-type-list
     `(
-      ;; Scalar types, plus all the vector and matrix expressions for each. E.g:
-      ;; bool, bool1, bool1x2, bool2, bool3x4, etc.
+      ;; TODO: Maybe make `void' a keyword?
+      "matrix" "void"
+
+      ;; Numeric scalars, plus all the vector and matrix expressions for each. E.g:
+      ;; float, float1, float1x2, uint2, bool3x4, etc.
       ,@(mapcar (lambda (type)
                   (concat type "\\([1234]?\\|\\([1234]x[1234]\\)?\\)"))
-                '("bool" "dword" "int" "uint" "half" "float" "double"
+                '("bool" "int" "uint" "float"
                   "min16float" "min10float" "min16int" "min12int" "min16uint"))
-
-      "matrix" "void"
+      ;; These numeric scalars don't expand to vectors/matrices
+      "half" "dword" "double"
 
       ;; Texture samplers
       "sampler" "sampler1D" "sampler2D" "sampler3D" "samplerCUBE" "sampler_state"
@@ -218,33 +239,60 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "RasterizerOrderedTexture1D" "RasterizerOrderedTexture1DArray" "RasterizerOrderedTexture2D"
       "RasterizerOrderedTexture2DArray" "RasterizerOrderedTexture3D"
 
+      ;; Misc
+      ;;
+      ;; TODO: Double check Object2 usage
       "Object2"
 
+      ;; Geometry shader stream outputs
       "PointStream" "LineStream" "TriangleStream"
       ))
 
   (defvar hlsl-qualifier-list
-    '("snorm" "unorm"
+    '(
+      ;; Misc
+      "snorm" "unorm" "in" "inline" "inout" "precise" "extern" "nointerpolation"
+      "precise" "shared" "groupshared" "static" "uniform" "volatile" "const"
+      "row_major" "column_major" "export" "linear" "centroid" "noperspective"
+      "sample" "globallycoherent"
+
+      ;; Geom shader primitives
+      "point" "line" "triangle" "lineadj" "triangledj"
+
+      "pixelfragment" "vertexfragment"
 
       ;; Taken directly from glsl-mode - not audited yet
-      "attribute" "const" "uniform" "varying" "buffer" "shared" "coherent"
-      "volatile" "restrict" "readonly" "writeonly" "layout" "centroid" "flat"
-      "smooth" "noperspective" "patch" "sample" "in" "out" "inout"
-      "invariant" "lowp" "mediump" "highp"))
+      ;; TODO: Remove
+      "attribute" "varying" "buffer" "coherent"
+      "volatile" "restrict" "readonly" "writeonly" "layout" "flat"
+      "smooth" "noperspective" "patch" "invariant" "lowp" "mediump" "highp"
+      ))
 
   (defvar hlsl-keyword-list
-    '("true" "false" "NULL" "register" "packoffset" "cbuffer" "tbuffer"
-      "pixelfragment" "vertexfragment"
-      ;; TODO: Maybe move compile_fragment
-      "compile_fragment"
+    `(
+      ;; Special types
+      "true" "false" "NULL" "null"
+
+      ;; Misc
+      "compile_fragment" "class" "interface" "break" "continue" "do" "default"
+      "discard" "for" "while" "if" "else" "return" "struct" "switch" "case"
+      "register" "packoffset" "cbuffer" "tbuffer" "fxgroup" "pass"
+      "technique[1-9]?[1-9]?"
+      "SetVertexShader" "SetGeometryShader" "SetPixelSader"
 
       ;; Attributes
       "maxvertexcount" "domain" "earlydepthstencil" "instance" "maxtessfactor"
       "numthreads" "outputcontrolpoints" "outputtopology" "partitioning"
       "patchconstantfunc"
-
-      ;; Geom shader types
-      "point" "line" "triangle" "lineadj" "triangledj"
+      ;; domain types
+      ;; TODO: move these into a dedicated domain matcher?
+      ;; TODO: `point' and `line' at least are duplicated here and in qualifiers
+      ;; TODO: Take another look at these, they should probably be handled differently
+      "tri" "quad" "isoline" "point" "line" "triangle_cw" "triangle_ccw"
+      "integer" "fractional_even" "fractional_odd" "pow2"
+      ;; Branching attributes
+      "unroll" "loop" "fastopt" "allow_uav_condition" "branch" "flatten"
+      "forcecase" "call"
 
       ;; Shader profiles
       ;;
@@ -268,41 +316,43 @@ are added to the `hlsl-builtin-list' and are fontified using the
 
       ;; Semantics
       ;;
-      ;; TODO: Lowercase and uppercase versions of semantics
-      "BINORMAL[0-9]?" "BLENDINDICES[0-9]?" "BLENDWEIGHT[0-9]?" "COLOR[0-9]?"
-      "NORMAL[0-9]?" "POSITION[0-9]?" "POSITIONT" "PSIZE[0-9]?" "TANGENT[0-9]?"
-      "TEXCOORD[0-9]" "FOG" "TESSFACTOR[0-9]?" "VFACE" "VPOS" "DEPTH[0-9]?"
-      "SV_ClipDistance[0-9]?" "SV_CullDistance[0-9]?" "SV_Coverage" "SV_Depth"
-      "SV_DepthGreaterEqual" "SV_DepthLessEqual" "SV_DispatchThreadID"
-      "SV_DomainLocation" "SV_GroupID" "SV_GroupIndex" "SV_GroupThreadID"
-      "SV_GSInstanceID" "SV_InnerCoverage" "SV_InsideTessFactor" "SV_InstanceID"
-      "SV_IsFrontFace" "SV_OutputControlPointID" "SV_Position" "SV_PrimitiveID"
-      "SV_RenderTargetArrayIndex" "SV_SampleIndex" "SV_StencilRef" "SV_Target[0-7]"
-      "SV_TessFactor" "SV_VertexID" "SV_ViewportArrayIndex" "SV_ShadingRate"
-      "SV_Target"
+      ;; All semantics are case-insensitive, so allow uppercase, lowercase and
+      ;; capitalised versions. Other/weird mixtures of case will not be
+      ;; highlighted for now, even though the HLSL spec allows them.
+      ,@(hlsl--mixed-case
+         '("Binormal[0-9]?" "BlendIndices[0-9]?" "BlendWeight[0-9]?" "Color[0-9]?"
+           "Normal[0-9]?" "Position[0-9]?" "PositionT" "PSize[0-9]?" "Tangent[0-9]?"
+           "TexCoord[0-9]" "Fog" "TessFactor[0-9]?" "VFace" "VPos" "Depth[0-9]?"
+           "SV_ClipDistance[0-9]?" "SV_CullDistance[0-9]?" "SV_Coverage" "SV_Depth"
+           "SV_DepthGreaterEqual" "SV_DepthLessEqual" "SV_DispatchThreadID"
+           "SV_DomainLocation" "SV_GroupID" "SV_GroupIndex" "SV_GroupThreadID"
+           "SV_GSInstanceID" "SV_InnerCoverage" "SV_InsideTessFactor" "SV_InstanceID"
+           "SV_IsFrontFace" "SV_OutputControlPointID" "SV_Position" "SV_PrimitiveID"
+           "SV_RenderTargetArrayIndex" "SV_SampleIndex" "SV_StencilRef" "SV_Target[0-7]"
+           "SV_TessFactor" "SV_VertexID" "SV_ViewportArrayIndex" "SV_ShadingRate"
+           "SV_Target"
+           ;; Misc Semantics
+           "BezierPos" "WorldPos" "TanUCorner" "TanVCorner" "TanWeights" "Bitangent[0-9]?"))
 
       ;; Unity keywords
       ;;
       ;; TODO: Separate derived mode for Unity ".shader" files? They're not strictly HLSL.
       "Shader" "Properties" "SubShader" "Tags" "Pass" "CGPROGRAM" "ENDCG"
-
-      ;; Taken directly from glsl-mode - not audited yet
-      "break" "continue" "do" "for" "while" "if" "else" "subroutine"
-      "discard" "return" "precision" "struct" "switch" "default" "case"))
+      ))
 
   (defvar hlsl-reserved-list
     '(
-      ;; Taken directly from glsl-mode - not audited yet
-      "input" "output" "asm" "class" "union" "enum" "typedef" "template" "this"
-      "packed" "resource" "goto" "inline" "noinline"
-      "common" "partition" "active" "long" "short" "half" "fixed" "unsigned" "superp"
-      "public" "static" "extern" "external" "interface"
-      "hvec2" "hvec3" "hvec4" "fvec2" "fvec3" "fvec4"
-      "filter" "sizeof" "cast" "namespace" "using"
-      "sampler3DRect"))
+      ;; [2022/01/31] Just the reserved words found on:
+      ;; https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-appendix-reserved-words
+      "auto" "case" "catch" "char" "class" "const_cast" "default" "delete" "dynamic_cast"
+      "enum" "explicit" "friend" "goto" "long" "mutable" "new" "operator" "private"
+      "protected" "public" "reinterpret_cast" "short" "signed" "sizeof" "static_cast"
+      "template" "this" "throw" "try" "typename" "union" "unsigned" "using" "virtual"
+      ))
 
   (defvar hlsl-deprecated-qualifier-list
-    '())
+    '(
+      ))
 
   (defvar hlsl-builtin-list
 
@@ -327,25 +377,22 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "ProcessQuadTessFactorsMin" "ProcessTriTessFactorsAvg" "ProcessTriTessFactorsMax"
       "ProcessTriTessFactorsMin" "radians" "rcp" "reflect" "refract" "reversebits"
       "round" "rsqrt" "saturate" "sign" "sin" "sincos" "sinh" "smoothstep" "sqrt"
-      "step" "tan" "tanh" "tex1D" "tex1D" "tex1Dbias" "tex1Dgrad" "tex1Dlod" "tex1Dproj"
-      "tex2D" "tex2D" "tex2Dbias" "tex2Dgrad" "tex2Dlod" "tex2Dproj" "tex3D" "tex3D"
-      "tex3Dbias" "tex3Dgrad" "tex3Dlod" "tex3Dproj" "texCUBE" "texCUBE" "texCUBEbias"
-      "texCUBEgrad" "texCUBElod" "texCUBEproj" "transpose" "trunc"
+      "step" "tan" "tanh" "tex1D" "tex1Dbias" "tex1Dgrad" "tex1Dlod" "tex1Dproj"
+      "tex2D" "tex2Dbias" "tex2Dgrad" "tex2Dlod" "tex2Dproj" "tex3D" "tex3Dbias"
+      "tex3Dgrad" "tex3Dlod" "tex3Dproj" "texCUBE" "texCUBEbias" "texCUBEgrad" "texCUBElod"
+      "texCUBEproj" "transpose" "trunc"
 
-      ;; Other things to consider builtins
-      ;; TODO: Move to keywords?
-      "SetVertexShader" "SetGeometryShader" "SetPixelSader"
-      ;; Buffers
-      "Load[234]?" "Store[234]?"
       ;; Geometry shader streams
       "Append" "RestartStrip"
+
       ;; Textures/Buffers
       "CalculateLevelOfDetail" "CalculateLevelOfDetailUnclamped" "Gather" "GetDimensions"
       "GetSamplePosition" "Sample" "SampleBias" "SampleCmp" "SampleGrad" "SampleLevel"
-      "Operator\\[\\]"
+      "Operator\\[\\]" "Load[234]?" "Store[234]?"
       "GatherRed" "GatherGreen" "GatherBlue" "GatherAlpha" "GatherCmp" "GatherCmpRed"
       "GatherCmpGreen" "GatherCmpBlue" "GatherCmpAlpha"
       "Sample" "SampleBias" "SampleCmp" "SampleCmpLevelZero" "SampleGrad" "SampleLevel"
+
       ;; Wave Intrinsics
       "QuadReadAcrossDiagonal" "QuadReadLaneAt" "QuadReadAcrossX" "QuadReadAcrossY"
       "WaveActiveAllEqual" "WaveActiveBitAnd" "WaveActiveBitOr" "WaveActiveBitXor"
@@ -353,29 +400,42 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "WaveActiveSum" "WaveActiveAllTrue" "WaveActiveAnyTrue" "WaveActiveBallot"
       "WaveGetLaneCount" "WaveGetLaneIndex" "WaveIsFirstLane" "WavePrefixCountBits"
       "WavePrefixProduct" "WavePrefixSum" "WaveReadLaneFirst" "WaveReadLaneAt"
+
+      ;; Render swizzles as though they are named builtins
+      "[xyzw]\\{1,4\\}" "[rgba]\\{1,4\\}"
+      ;; TODO: Maybe these types of swizzles?
+      ;; /\.\(_m[0-3]\{2}\)\{1,4\}/
+      ;; /\.\(_[1-4]\{2}\)\{1,4\}/
+
+      ;; Unsorted
+      "Consume" "DecrementCounter" "IncrementCounter"
       ))
 
   (defvar hlsl-deprecated-builtin-list
-    '())
+    '(
+      ))
 
   (defvar hlsl-deprecated-variables-list
-    '())
+    '(
+      ))
 
   (defvar hlsl-preprocessor-directive-list
     '(
-      ;; Taken directly from glsl-mode - not audited yet
-      "define" "undef" "if" "ifdef" "ifndef" "else" "elif" "endif"
-      "error" "pragma" "extension" "version" "line" "include"))
+      "define" "elif" "else" "endif" "error" "if" "ifdef" "ifndef" "include"
+      "line" "pragma" "undef"
+      ))
 
   (defvar hlsl-preprocessor-expr-list
     '(
       ;; Taken directly from glsl-mode - not audited yet
-      "defined" "##"))
+      "defined" "##"
+      ))
 
   (defvar hlsl-preprocessor-builtin-list
     '(
       ;; Taken directly from glsl-mode - not audited yet
-      "__LINE__" "__FILE__" "__VERSION__"))
+      "__LINE__" "__FILE__" "__VERSION__"
+      ))
 
   ) ; eval-and-compile
 
