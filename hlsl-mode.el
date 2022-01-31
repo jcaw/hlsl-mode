@@ -1,4 +1,4 @@
-;;; glsl-mode.el --- major mode for Open GLSL shader files
+;;; hlsl-mode.el --- major mode for Open HLSL shader files
 
 ;; Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
 ;; Copyright (C) 2011, 2014, 2019 Jim Hourihan
@@ -7,9 +7,9 @@
 ;;          Jim Hourihan <jimhourihan ~at~ gmail.com> (updated for 4.6, etc)
 ;; Keywords: languages OpenGL GPU SPIR-V Vulkan
 ;; Version: 2.4
-;; X-URL: https://github.com/jimhourihan/glsl-mode
+;; X-URL: https://github.com/jimhourihan/hlsl-mode
 ;;
-;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
+;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/hlsl-mode/
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,47 +26,47 @@
 
 ;;; Commentary:
 
-;; Major mode for editing OpenGLSL grammar files, usually files ending with
-;; `.vert', `.frag', `.glsl', `.geom'.  Is is based on c-mode plus some
+;; Major mode for editing OpenHLSL grammar files, usually files ending with
+;; `.vert', `.frag', `.hlsl', `.geom'.  Is is based on c-mode plus some
 ;; features and pre-specified fontifications.
 ;;
-;; Modifications from the 1.0 version of glsl-mode (jimhourihan):
+;; Modifications from the 1.0 version of hlsl-mode (jimhourihan):
 ;;  * Removed original optimized regexps for font-lock-keywords and
 ;;    replaced with keyword lists for easier maintenance
 ;;  * Added customization group and faces
 ;;  * Preprocessor faces
-;;  * Updated to GLSL 4.6
+;;  * Updated to HLSL 4.6
 ;;  * Separate deprecated symbols
 ;;  * Made _ part of a word
 ;;  * man page lookup at opengl.org
 
 ;; This package provides the following features:
 ;;  * Syntax coloring (via font-lock) for grammar symbols and
-;;    builtin functions and variables for up to GLSL version 4.6
+;;    builtin functions and variables for up to HLSL version 4.6
 ;;  * Indentation for the current line (TAB) and selected region (C-M-\).
 ;;  * Switching between file.vert and file.frag
 ;;    with S-lefttab (via ff-find-other-file)
-;;  * interactive function glsl-find-man-page prompts for glsl built
+;;  * interactive function hlsl-find-man-page prompts for hlsl built
 ;;    in function, formats opengl.org url and passes to browse-url
 
 ;;; Installation:
 
 ;; This file requires Emacs-20.3 or higher and package cc-mode.
 
-;; If glsl-mode is not part of your distribution, put this file into your
+;; If hlsl-mode is not part of your distribution, put this file into your
 ;; load-path and the following into your ~/.emacs:
-;;   (autoload 'glsl-mode "glsl-mode" nil t)
-;;   (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
+;;   (autoload 'hlsl-mode "hlsl-mode" nil t)
+;;   (add-to-list 'auto-mode-alist '("\\.hlsl\\'" . hlsl-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.vert\\'" . hlsl-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.frag\\'" . hlsl-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.geom\\'" . hlsl-mode))
 
 ;; Reference:
-;; https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf
+;; https://www.khronos.org/registry/OpenGL/specs/gl/HLSLangSpec.4.60.pdf
 
 ;;; Code:
 
-(provide 'glsl-mode)
+(provide 'hlsl-mode)
 
 (eval-when-compile			; required and optional libraries
   (require 'cc-mode)
@@ -74,131 +74,131 @@
 
 (require 'align)
 
-(defgroup glsl nil
+(defgroup hlsl nil
   "OpenGL Shading Language Major Mode"
   :group 'languages)
 
-(defconst glsl-language-version "4.6"
-  "GLSL language version number.")
+(defconst hlsl-language-version "5.0"
+  "HLSL language version number.")
 
-(defconst gl-version "4.6"
+(defconst hlsl-version "5.0"
   "OpenGL major mode version number.")
 
-(defvar glsl-mode-menu nil "Menu for GLSL mode")
+(defvar hlsl-mode-menu nil "Menu for HLSL mode")
 
-(defvar glsl-mode-hook nil "GLSL mode hook")
+(defvar hlsl-mode-hook nil "HLSL mode hook")
 
-(defvar glsl-type-face 'glsl-type-face)
-(defface glsl-type-face
-  '((t (:inherit font-lock-type-face))) "glsl: type face"
-  :group 'glsl)
+(defvar hlsl-type-face 'hlsl-type-face)
+(defface hlsl-type-face
+  '((t (:inherit font-lock-type-face))) "hlsl: type face"
+  :group 'hlsl)
 
-(defvar glsl-builtin-face 'glsl-builtin-face)
-(defface glsl-builtin-face
-  '((t (:inherit font-lock-builtin-face))) "glsl: builtin face"
-  :group 'glsl)
+(defvar hlsl-builtin-face 'hlsl-builtin-face)
+(defface hlsl-builtin-face
+  '((t (:inherit font-lock-builtin-face))) "hlsl: builtin face"
+  :group 'hlsl)
 
-(defvar glsl-deprecated-builtin-face 'glsl-deprecated-builtin-face)
-(defface glsl-deprecated-builtin-face
-  '((t (:inherit font-lock-warning-face))) "glsl: deprecated builtin face"
-  :group 'glsl)
+(defvar hlsl-deprecated-builtin-face 'hlsl-deprecated-builtin-face)
+(defface hlsl-deprecated-builtin-face
+  '((t (:inherit font-lock-warning-face))) "hlsl: deprecated builtin face"
+  :group 'hlsl)
 
-(defvar glsl-qualifier-face 'glsl-qualifier-face)
-(defface glsl-qualifier-face
-  '((t (:inherit font-lock-keyword-face))) "glsl: qualifier face"
-  :group 'glsl)
+(defvar hlsl-qualifier-face 'hlsl-qualifier-face)
+(defface hlsl-qualifier-face
+  '((t (:inherit font-lock-keyword-face))) "hlsl: qualifier face"
+  :group 'hlsl)
 
-(defvar glsl-keyword-face 'glsl-keyword-face)
-(defface glsl-keyword-face
-  '((t (:inherit font-lock-keyword-face))) "glsl: keyword face"
-  :group 'glsl)
+(defvar hlsl-keyword-face 'hlsl-keyword-face)
+(defface hlsl-keyword-face
+  '((t (:inherit font-lock-keyword-face))) "hlsl: keyword face"
+  :group 'hlsl)
 
-(defvar glsl-deprecated-keyword-face 'glsl-deprecated-keyword-face)
-(defface glsl-deprecated-keyword-face
-  '((t (:inherit font-lock-warning-face))) "glsl: deprecated keyword face"
-  :group 'glsl)
+(defvar hlsl-deprecated-keyword-face 'hlsl-deprecated-keyword-face)
+(defface hlsl-deprecated-keyword-face
+  '((t (:inherit font-lock-warning-face))) "hlsl: deprecated keyword face"
+  :group 'hlsl)
 
-(defvar glsl-variable-name-face 'glsl-variable-name-face)
-(defface glsl-variable-name-face
-  '((t (:inherit font-lock-variable-name-face))) "glsl: variable face"
-  :group 'glsl)
+(defvar hlsl-variable-name-face 'hlsl-variable-name-face)
+(defface hlsl-variable-name-face
+  '((t (:inherit font-lock-variable-name-face))) "hlsl: variable face"
+  :group 'hlsl)
 
-(defvar glsl-deprecated-variable-name-face 'glsl-deprecated-variable-name-face)
-(defface glsl-deprecated-variable-name-face
-  '((t (:inherit font-lock-warning-face))) "glsl: deprecated variable face"
-  :group 'glsl)
+(defvar hlsl-deprecated-variable-name-face 'hlsl-deprecated-variable-name-face)
+(defface hlsl-deprecated-variable-name-face
+  '((t (:inherit font-lock-warning-face))) "hlsl: deprecated variable face"
+  :group 'hlsl)
 
-(defvar glsl-reserved-keyword-face 'glsl-reserved-keyword-face)
-(defface glsl-reserved-keyword-face
-  '((t (:inherit glsl-keyword-face))) "glsl: reserved keyword face"
-  :group 'glsl)
+(defvar hlsl-reserved-keyword-face 'hlsl-reserved-keyword-face)
+(defface hlsl-reserved-keyword-face
+  '((t (:inherit hlsl-keyword-face))) "hlsl: reserved keyword face"
+  :group 'hlsl)
 
-(defvar glsl-preprocessor-face 'glsl-preprocessor-face)
-(defface glsl-preprocessor-face
-  '((t (:inherit font-lock-preprocessor-face))) "glsl: preprocessor face"
-  :group 'glsl)
+(defvar hlsl-preprocessor-face 'hlsl-preprocessor-face)
+(defface hlsl-preprocessor-face
+  '((t (:inherit font-lock-preprocessor-face))) "hlsl: preprocessor face"
+  :group 'hlsl)
 
-(defcustom glsl-additional-types nil
+(defcustom hlsl-additional-types nil
   "List of additional keywords to be considered types. These are
-added to the `glsl-type-list' and are fontified using the
-`glsl-type-face'. Examples of existing types include \"float\", \"vec4\",
+added to the `hlsl-type-list' and are fontified using the
+`hlsl-type-face'. Examples of existing types include \"float\", \"vec4\",
   and \"int\"."
   :type '(repeat (string :tag "Type Name"))
-  :group 'glsl)
+  :group 'hlsl)
 
-(defcustom glsl-additional-qualifiers nil
+(defcustom hlsl-additional-qualifiers nil
   "List of additional keywords to be considered qualifiers. These
-are added to the `glsl-qualifier-list' and are fontified using
-the `glsl-qualifier-face'. Examples of existing qualifiers
+are added to the `hlsl-qualifier-list' and are fontified using
+the `hlsl-qualifier-face'. Examples of existing qualifiers
 include \"const\", \"in\", and \"out\"."
   :type '(repeat (string :tag "Qualifier Name"))
-  :group 'glsl)
+  :group 'hlsl)
 
-(defcustom glsl-additional-keywords nil
-  "List of additional GLSL keywords. These are added to the
-`glsl-keyword-list' and are fontified using the
-`glsl-keyword-face'. Example existing keywords include \"while\",
+(defcustom hlsl-additional-keywords nil
+  "List of additional HLSL keywords. These are added to the
+`hlsl-keyword-list' and are fontified using the
+`hlsl-keyword-face'. Example existing keywords include \"while\",
 \"if\", and \"return\"."
   :type '(repeat (string :tag "Keyword"))
-  :group 'glsl)
+  :group 'hlsl)
 
-(defcustom glsl-additional-built-ins nil
+(defcustom hlsl-additional-built-ins nil
   "List of additional functions to be considered built-in. These
-are added to the `glsl-builtin-list' and are fontified using the
-`glsl-builtin-face'."
+are added to the `hlsl-builtin-list' and are fontified using the
+`hlsl-builtin-face'."
   :type '(repeat (string :tag "Keyword"))
-  :group 'glsl)
+  :group 'hlsl)
 
-(defvar glsl-mode-hook nil)
+(defvar hlsl-mode-hook nil)
 
-(defvar glsl-mode-map
-  (let ((glsl-mode-map (make-sparse-keymap)))
-    (define-key glsl-mode-map [S-iso-lefttab] 'ff-find-other-file)
-    glsl-mode-map)
-  "Keymap for GLSL major mode.")
+(defvar hlsl-mode-map
+  (let ((hlsl-mode-map (make-sparse-keymap)))
+    (define-key hlsl-mode-map [S-iso-lefttab] 'ff-find-other-file)
+    hlsl-mode-map)
+  "Keymap for HLSL major mode.")
 
-(defcustom glsl-browse-url-function 'browse-url
-  "Function used to display GLSL man pages. E.g. browse-url, eww, w3m, etc"
+(defcustom hlsl-browse-url-function 'browse-url
+  "Function used to display HLSL man pages. E.g. browse-url, eww, w3m, etc"
   :type 'function
-  :group 'glsl)
+  :group 'hlsl)
 
-(defcustom glsl-man-pages-base-url "http://www.opengl.org/sdk/docs/man/html/"
+(defcustom hlsl-man-pages-base-url "http://www.opengl.org/sdk/docs/man/html/"
   "Location of GL man pages."
   :type 'string
-  :group 'glsl)
+  :group 'hlsl)
 
 ;;;###autoload
 (progn
-  (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode)))
+  (add-to-list 'auto-mode-alist '("\\.vert\\'" . hlsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.frag\\'" . hlsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.geom\\'" . hlsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.hlsl\\'" . hlsl-mode)))
 
 (eval-and-compile
   ;; These vars are useful for completion so keep them around after
   ;; compile as well. The goal here is to have the byte compiled code
   ;; have optimized regexps so its not done at eval time.
-  (defvar glsl-type-list
+  (defvar hlsl-type-list
     '("float" "double" "int" "void" "bool" "true" "false" "mat2" "mat3"
       "mat4" "dmat2" "dmat3" "dmat4" "mat2x2" "mat2x3" "mat2x4" "dmat2x2"
       "dmat2x3" "dmat2x4" "mat3x2" "mat3x3" "mat3x4" "dmat3x2" "dmat3x3"
@@ -223,17 +223,17 @@ are added to the `glsl-builtin-list' and are fontified using the
       "iimageCubeArray" "uimageCubeArray" "image2DMS" "iimage2DMS" "uimage2DMS"
       "image2DMSArray" "iimage2DMSArray" "uimage2DMSArray"))
 
-  (defvar glsl-qualifier-list
+  (defvar hlsl-qualifier-list
     '("attribute" "const" "uniform" "varying" "buffer" "shared" "coherent"
     "volatile" "restrict" "readonly" "writeonly" "layout" "centroid" "flat"
     "smooth" "noperspective" "patch" "sample" "in" "out" "inout"
     "invariant" "lowp" "mediump" "highp"))
 
-  (defvar glsl-keyword-list
+  (defvar hlsl-keyword-list
     '("break" "continue" "do" "for" "while" "if" "else" "subroutine"
       "discard" "return" "precision" "struct" "switch" "default" "case"))
 
-  (defvar glsl-reserved-list
+  (defvar hlsl-reserved-list
     '("input" "output" "asm" "class" "union" "enum" "typedef" "template" "this"
       "packed" "resource" "goto" "inline" "noinline"
       "common" "partition" "active" "long" "short" "half" "fixed" "unsigned" "superp"
@@ -242,10 +242,10 @@ are added to the `glsl-builtin-list' and are fontified using the
       "filter" "sizeof" "cast" "namespace" "using"
       "sampler3DRect"))
 
-  (defvar glsl-deprecated-qualifier-list
+  (defvar hlsl-deprecated-qualifier-list
     '("varying" "attribute")) ; centroid is deprecated when used with varying
 
-  (defvar glsl-builtin-list
+  (defvar hlsl-builtin-list
     '("abs" "acos" "acosh" "all" "any" "anyInvocation" "allInvocations"
       "allInvocationsEqual" "asin" "asinh" "atan" "atanh"
       "atomicAdd" "atomicMin" "atomicMax" "atomicAnd" "atomicOr"
@@ -283,7 +283,7 @@ are added to the `glsl-builtin-list' and are fontified using the
       "umulExtended" "unpackDouble2x32" "unpackHalf2x16" "unpackSnorm2x16"
       "unpackSnorm4x8" "unpackUnorm2x16" "unpackUnorm4x8" "usubBorrow"))
 
-  (defvar glsl-deprecated-builtin-list
+  (defvar hlsl-deprecated-builtin-list
     '("noise1" "noise2" "noise3" "noise4"
       "texture1D" "texture1DProj" "texture1DLod" "texture1DProjLod"
       "texture2D" "texture2DProj" "texture2DLod" "texture2DProjLod"
@@ -293,117 +293,117 @@ are added to the `glsl-builtin-list' and are fontified using the
       "shadow2D" "shadow2DProj" "shadow2DLod" "shadow2DProjLod"
       "textureCube" "textureCubeLod"))
 
-  (defvar glsl-deprecated-variables-list
+  (defvar hlsl-deprecated-variables-list
     '("gl_FragColor" "gl_FragData" "gl_MaxVarying" "gl_MaxVaryingFloats"
       "gl_MaxVaryingComponents"))
 
-  (defvar glsl-preprocessor-directive-list
+  (defvar hlsl-preprocessor-directive-list
     '("define" "undef" "if" "ifdef" "ifndef" "else" "elif" "endif"
       "error" "pragma" "extension" "version" "line"))
 
-  (defvar glsl-preprocessor-expr-list
+  (defvar hlsl-preprocessor-expr-list
     '("defined" "##"))
 
-  (defvar glsl-preprocessor-builtin-list
+  (defvar hlsl-preprocessor-builtin-list
     '("__LINE__" "__FILE__" "__VERSION__"))
 
   ) ; eval-and-compile
 
 (eval-and-compile
-  (defun glsl-ppre (re)
+  (defun hlsl-ppre (re)
     (format "\\<\\(%s\\)\\>" (regexp-opt re))))
 
-(defvar glsl-font-lock-keywords-1
+(defvar hlsl-font-lock-keywords-1
   (append
    (list
     (cons (eval-when-compile
             (format "^[ \t]*#[ \t]*\\<\\(%s\\)\\>"
-                    (regexp-opt glsl-preprocessor-directive-list)))
-          glsl-preprocessor-face)
+                    (regexp-opt hlsl-preprocessor-directive-list)))
+          hlsl-preprocessor-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-type-list))
-          glsl-type-face)
+            (hlsl-ppre hlsl-type-list))
+          hlsl-type-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-deprecated-qualifier-list))
-          glsl-deprecated-keyword-face)
+            (hlsl-ppre hlsl-deprecated-qualifier-list))
+          hlsl-deprecated-keyword-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-reserved-list))
-          glsl-reserved-keyword-face)
+            (hlsl-ppre hlsl-reserved-list))
+          hlsl-reserved-keyword-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-qualifier-list))
-          glsl-qualifier-face)
+            (hlsl-ppre hlsl-qualifier-list))
+          hlsl-qualifier-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-keyword-list))
-          glsl-keyword-face)
+            (hlsl-ppre hlsl-keyword-list))
+          hlsl-keyword-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-preprocessor-builtin-list))
-          glsl-keyword-face)
+            (hlsl-ppre hlsl-preprocessor-builtin-list))
+          hlsl-keyword-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-deprecated-builtin-list))
-          glsl-deprecated-builtin-face)
+            (hlsl-ppre hlsl-deprecated-builtin-list))
+          hlsl-deprecated-builtin-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-builtin-list))
-          glsl-builtin-face)
+            (hlsl-ppre hlsl-builtin-list))
+          hlsl-builtin-face)
     (cons (eval-when-compile
-            (glsl-ppre glsl-deprecated-variables-list))
-          glsl-deprecated-variable-name-face)
-    (cons "gl_[A-Z][A-Za-z_]+" glsl-variable-name-face)
+            (hlsl-ppre hlsl-deprecated-variables-list))
+          hlsl-deprecated-variable-name-face)
+    (cons "gl_[A-Z][A-Za-z_]+" hlsl-variable-name-face)
     )
 
-   (when glsl-additional-types
+   (when hlsl-additional-types
      (list
-      (cons (glsl-ppre glsl-additional-types) glsl-type-face)))
-   (when glsl-additional-keywords
+      (cons (hlsl-ppre hlsl-additional-types) hlsl-type-face)))
+   (when hlsl-additional-keywords
      (list
-      (cons (glsl-ppre glsl-additional-keywords) glsl-keyword-face)))
-   (when glsl-additional-qualifiers
+      (cons (hlsl-ppre hlsl-additional-keywords) hlsl-keyword-face)))
+   (when hlsl-additional-qualifiers
      (list
-      (cons (glsl-ppre glsl-additional-qualifiers) glsl-qualifier-face)))
-   (when glsl-additional-built-ins
+      (cons (hlsl-ppre hlsl-additional-qualifiers) hlsl-qualifier-face)))
+   (when hlsl-additional-built-ins
      (list
-      (cons (glsl-ppre glsl-additional-built-ins) glsl-builtin-face)))
+      (cons (hlsl-ppre hlsl-additional-built-ins) hlsl-builtin-face)))
    )
-  "Highlighting expressions for GLSL mode.")
+  "Highlighting expressions for HLSL mode.")
 
 
-(defvar glsl-font-lock-keywords glsl-font-lock-keywords-1
-  "Default highlighting expressions for GLSL mode.")
+(defvar hlsl-font-lock-keywords hlsl-font-lock-keywords-1
+  "Default highlighting expressions for HLSL mode.")
 
-(defvar glsl-mode-syntax-table
-  (let ((glsl-mode-syntax-table (make-syntax-table)))
-    (modify-syntax-entry ?/ ". 124b" glsl-mode-syntax-table)
-    (modify-syntax-entry ?* ". 23" glsl-mode-syntax-table)
-    (modify-syntax-entry ?\n "> b" glsl-mode-syntax-table)
-    (modify-syntax-entry ?_ "w" glsl-mode-syntax-table)
-    glsl-mode-syntax-table)
-  "Syntax table for glsl-mode.")
+(defvar hlsl-mode-syntax-table
+  (let ((hlsl-mode-syntax-table (make-syntax-table)))
+    (modify-syntax-entry ?/ ". 124b" hlsl-mode-syntax-table)
+    (modify-syntax-entry ?* ". 23" hlsl-mode-syntax-table)
+    (modify-syntax-entry ?\n "> b" hlsl-mode-syntax-table)
+    (modify-syntax-entry ?_ "w" hlsl-mode-syntax-table)
+    hlsl-mode-syntax-table)
+  "Syntax table for hlsl-mode.")
 
-(defvar glsl-other-file-alist
+(defvar hlsl-other-file-alist
   '(("\\.frag$" (".vert"))
     ("\\.vert$" (".frag"))
     )
   "Alist of extensions to find given the current file's extension.")
 
-(defun glsl-man-completion-list ()
-  "Return list of all GLSL keywords."
-  (append glsl-builtin-list glsl-deprecated-builtin-list))
+(defun hlsl-man-completion-list ()
+  "Return list of all HLSL keywords."
+  (append hlsl-builtin-list hlsl-deprecated-builtin-list))
 
-(defun glsl-find-man-page (thing)
-  "Collects and displays manual entry for GLSL built-in function THING."
+(defun hlsl-find-man-page (thing)
+  "Collects and displays manual entry for HLSL built-in function THING."
   (interactive
    (let ((word (current-word nil t)))
      (list
       (completing-read
-       (concat "OpenGL.org GLSL man page: (" word "): ")
-       (glsl-man-completion-list)
+       (concat "OpenGL.org HLSL man page: (" word "): ")
+       (hlsl-man-completion-list)
        nil nil nil nil word))))
   (save-excursion
-    (apply glsl-browse-url-function
-           (list (concat glsl-man-pages-base-url thing ".xhtml")))))
+    (apply hlsl-browse-url-function
+           (list (concat hlsl-man-pages-base-url thing ".xhtml")))))
 
-(easy-menu-define glsl-menu glsl-mode-map
-  "GLSL Menu"
-    `("GLSL"
+(easy-menu-define hlsl-menu hlsl-mode-map
+  "HLSL Menu"
+    `("HLSL"
       ["Comment Out Region"     comment-region
        (c-fn-region-is-active-p)]
       ["Uncomment Region"       (comment-region (region-beginning)
@@ -423,29 +423,29 @@ are added to the `glsl-builtin-list' and are fontified using the
       "----"
       ["Backslashify"           c-backslash-region (c-fn-region-is-active-p)]
       "----"
-      ["Find GLSL Man Page"  glsl-find-man-page t]
+      ["Find HLSL Man Page"  hlsl-find-man-page t]
       ))
 
 ;;;###autoload
-(define-derived-mode glsl-mode prog-mode "GLSL"
-  "Major mode for editing GLSL shader files."
+(define-derived-mode hlsl-mode prog-mode "HLSL"
+  "Major mode for editing HLSL shader files."
   (c-initialize-cc-mode t)
   (setq abbrev-mode t)
   (c-init-language-vars-for 'c-mode)
   (c-common-init 'c-mode)
   (cc-imenu-init cc-imenu-c++-generic-expression)
-  (set (make-local-variable 'font-lock-defaults) '(glsl-font-lock-keywords))
-  (set (make-local-variable 'ff-other-file-alist) 'glsl-other-file-alist)
+  (set (make-local-variable 'font-lock-defaults) '(hlsl-font-lock-keywords))
+  (set (make-local-variable 'ff-other-file-alist) 'hlsl-other-file-alist)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-padding) "")
-  (easy-menu-add glsl-menu)
-  (add-to-list 'align-c++-modes 'glsl-mode)
+  (easy-menu-add hlsl-menu)
+  (add-to-list 'align-c++-modes 'hlsl-mode)
   (c-run-mode-hooks 'c-mode-common-hook)
-  (run-mode-hooks 'glsl-mode-hook)
+  (run-mode-hooks 'hlsl-mode-hook)
   :after-hook (progn (c-make-noise-macro-regexps)
 		     (c-make-macro-with-semi-re)
 		     (c-update-modeline))
   )
 
-;;; glsl-mode.el ends here
+;;; hlsl-mode.el ends here
