@@ -465,6 +465,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
 ;;     (apply hlsl-browse-url-function
 ;;            (list (concat hlsl-man-pages-base-url thing ".xhtml")))))
 
+;; TODO: Maybe remove easy menu?
 (easy-menu-define hlsl-menu hlsl-mode-map
   "HLSL Menu"
     `("HLSL"
