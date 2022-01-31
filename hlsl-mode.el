@@ -451,18 +451,19 @@ are added to the `hlsl-builtin-list' and are fontified using the
   "Return list of all HLSL keywords."
   (append hlsl-builtin-list hlsl-deprecated-builtin-list))
 
-(defun hlsl-find-man-page (thing)
-  "Collects and displays manual entry for HLSL built-in function THING."
-  (interactive
-   (let ((word (current-word nil t)))
-     (list
-      (completing-read
-       (concat "OpenGL.org HLSL man page: (" word "): ")
-       (hlsl-man-completion-list)
-       nil nil nil nil word))))
-  (save-excursion
-    (apply hlsl-browse-url-function
-           (list (concat hlsl-man-pages-base-url thing ".xhtml")))))
+;; TODO: Switch over to HLSL docs?
+;; (defun hlsl-find-man-page (thing)
+;;   "Collects and displays manual entry for HLSL built-in function THING."
+;;   (interactive
+;;    (let ((word (current-word nil t)))
+;;      (list
+;;       (completing-read
+;;        (concat "OpenGL.org HLSL man page: (" word "): ")
+;;        (hlsl-man-completion-list)
+;;        nil nil nil nil word))))
+;;   (save-excursion
+;;     (apply hlsl-browse-url-function
+;;            (list (concat hlsl-man-pages-base-url thing ".xhtml")))))
 
 (easy-menu-define hlsl-menu hlsl-mode-map
   "HLSL Menu"
