@@ -63,8 +63,6 @@
 (defconst hlsl-direct3d-version "12"
   "Direct3D language version number.")
 
-(defvar hlsl-mode-menu nil "Menu for HLSL mode.")
-
 (defvar hlsl-type-face 'hlsl-type-face)
 (defface hlsl-type-face
   '((t (:inherit font-lock-type-face))) "HLSL: type face."
