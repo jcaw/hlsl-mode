@@ -179,10 +179,15 @@ are added to the `hlsl-builtin-list' and are fontified using the
 
 ;;;###autoload
 (progn
-  (add-to-list 'auto-mode-alist '("\\.vert\\'" . hlsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.frag\\'" . hlsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.geom\\'" . hlsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.hlsl\\'" . hlsl-mode)))
+  (append auto-mode-alist '(("\\.fx\\'" . hlsl-mode)
+                            ("\\.fxc\\'" . hlsl-mode)
+                            ("\\.fxh\\'" . hlsl-mode)
+                            ("\\.hlsl\\'" . hlsl-mode)
+                            ;; Unity shader formats
+                            ("\\.shader\\'" . hlsl-mode)
+                            ("\\.cginc\\'" . hlsl-mode)
+                            ;; Unity compute shaders are HLSL
+                            ("\\.compute\\'" . hlsl-mode))))
 
 (eval-and-compile
   ;; These vars are useful for completion so keep them around after
