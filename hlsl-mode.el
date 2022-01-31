@@ -197,9 +197,9 @@ duplicates)."
                                                (downcase (substring s 1)))))))
                             strings)))
 
-  ;; These vars are useful for completion so keep them around after
-  ;; compile as well. The goal here is to have the byte compiled code
-  ;; have optimized regexps so its not done at eval time.
+  ;; These vars are useful for completion so keep them around after compile as
+  ;; well. The goal here is to have the byte compiled code have optimized
+  ;; regexps so its not done at eval time.
   (defvar hlsl-type-list
     `(
       ;; TODO: Maybe make `void' a keyword?
