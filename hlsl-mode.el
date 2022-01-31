@@ -541,28 +541,28 @@ duplicates)."
 ;; TODO: Maybe remove easy menu?
 (easy-menu-define hlsl-menu hlsl-mode-map
   "HLSL Menu"
-    `("HLSL"
-      ["Comment Out Region"     comment-region
-       (c-fn-region-is-active-p)]
-      ["Uncomment Region"       (comment-region (region-beginning)
-                                                (region-end) '(4))
-       (c-fn-region-is-active-p)]
-      ["Indent Expression"      c-indent-exp
-       (memq (char-after) '(?\( ?\[ ?\{))]
-      ["Indent Line or Region"  c-indent-line-or-region t]
-      ["Fill Comment Paragraph" c-fill-paragraph t]
-      "----"
-      ["Backward Statement"     c-beginning-of-statement t]
-      ["Forward Statement"      c-end-of-statement t]
-      "----"
-      ["Up Conditional"         c-up-conditional t]
-      ["Backward Conditional"   c-backward-conditional t]
-      ["Forward Conditional"    c-forward-conditional t]
-      "----"
-      ["Backslashify"           c-backslash-region (c-fn-region-is-active-p)]
-      "----"
-      ["Find HLSL Man Page"  hlsl-find-man-page t]
-      ))
+  `("HLSL"
+    ["Comment Out Region"     comment-region
+     (c-fn-region-is-active-p)]
+    ["Uncomment Region"       (comment-region (region-beginning)
+                                              (region-end) '(4))
+     (c-fn-region-is-active-p)]
+    ["Indent Expression"      c-indent-exp
+     (memq (char-after) '(?\( ?\[ ?\{))]
+    ["Indent Line or Region"  c-indent-line-or-region t]
+    ["Fill Comment Paragraph" c-fill-paragraph t]
+    "----"
+    ["Backward Statement"     c-beginning-of-statement t]
+    ["Forward Statement"      c-end-of-statement t]
+    "----"
+    ["Up Conditional"         c-up-conditional t]
+    ["Backward Conditional"   c-backward-conditional t]
+    ["Forward Conditional"    c-forward-conditional t]
+    "----"
+    ["Backslashify"           c-backslash-region (c-fn-region-is-active-p)]
+    "----"
+    ["Find HLSL Man Page"  hlsl-find-man-page t]
+    ))
 
 ;;;###autoload
 (define-derived-mode hlsl-mode prog-mode "HLSL"
