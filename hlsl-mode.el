@@ -9,7 +9,7 @@
 ;; Keywords: languages HLSL GPU shaders
 ;; Version: 1.0.0
 ;; URL: https://github.com/jcaw/hlsl-mode
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "24.4"))
 ;;
 ;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
 
@@ -571,7 +571,12 @@ duplicates)."
   (add-to-list 'align-c++-modes 'hlsl-mode)
   (c-run-mode-hooks 'c-mode-common-hook)
   (run-mode-hooks 'hlsl-mode-hook)
-  :after-hook (progn (c-make-noise-macro-regexps)
+  ;; TODO: Guard `c-make-noise-macro-regexps' based on Emacs version, then lower
+  ;;   dependency.
+  :after-hook (progn (when (fboundp 'c-make-noise-macro-regexps)
+                       ;; Depends on Emacs 26.1, guarding this allows us to
+                       ;; support down to Emacs 24.4
+                       (c-make-noise-macro-regexps))
                      (c-make-macro-with-semi-re)
                      (c-update-modeline)))
 
