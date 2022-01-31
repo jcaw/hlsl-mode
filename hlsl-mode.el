@@ -267,6 +267,8 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "fx_1_0" "fx_2_0" "fx_4_0" "fx_4_1" "fx_5_0"
 
       ;; Semantics
+      ;;
+      ;; TODO: Lowercase and uppercase versions of semantics
       "BINORMAL[0-9]?" "BLENDINDICES[0-9]?" "BLENDWEIGHT[0-9]?" "COLOR[0-9]?"
       "NORMAL[0-9]?" "POSITION[0-9]?" "POSITIONT" "PSIZE[0-9]?" "TANGENT[0-9]?"
       "TEXCOORD[0-9]" "FOG" "TESSFACTOR[0-9]?" "VFACE" "VPOS" "DEPTH[0-9]?"
