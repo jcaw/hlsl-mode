@@ -196,7 +196,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
       ;; Scalar types, plus all the vector and matrix expressions for each. E.g:
       ;; bool, bool1, bool1x2, bool2, bool3x4, etc.
       ,@(mapcar (lambda (type)
-                  (concat type "\\([1234]\\|\\([1234]x[1234]\\)\\)?"))
+                  (concat type "\\([1234]?\\|\\([1234]x[1234]\\)?\\)"))
                 '("bool" "dword" "int" "uint" "half" "float" "double"
                   "min16float" "min10float" "min16int" "min12int" "min16uint"))
 
