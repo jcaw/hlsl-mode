@@ -36,20 +36,9 @@
 
 ;; This package provides the following features:
 ;;  * Syntax coloring (via font-lock) for grammar symbols and
-;;    builtin functions and variables for up to HLSL version 4.6
+;;    builtin functions and variables for HLSL (up to the version specified
+;;    by `hlsl-shader-model-version')
 ;;  * Indentation for the current line (TAB) and selected region (C-M-\).
-;;  * Switching between file.vert and file.frag
-;;    with S-lefttab (via ff-find-other-file)
-;;  * interactive function hlsl-find-man-page prompts for hlsl built
-;;    in function, formats opengl.org url and passes to browse-url
-
-;;; Installation:
-
-;; This file requires Emacs-20.3 or higher and package cc-mode.
-
-;; If hlsl-mode is not part of your distribution, put this file into your
-;; load-path and the following into your ~/.emacs:
-;;   (autoload 'hlsl-mode "hlsl-mode" nil t)
 
 ;; Reference:
 ;; https://www.khronos.org/registry/OpenGL/specs/gl/HLSLangSpec.4.60.pdf
