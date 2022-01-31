@@ -1,4 +1,4 @@
-;;; hlsl-mode.el --- major mode for HLSL shader files  -*- lexical-binding: t; -*-
+;;; hlsl-mode.el --- Major mode for HLSL shader files  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
 ;; Copyright (C) 2011, 2014, 2019 Jim Hourihan
@@ -8,7 +8,7 @@
 ;;          GitHub user "jcaw"
 ;; Keywords: languages HLSL GPU shaders
 ;; Version: 0.0
-;; X-URL: https://github.com/jcaw/hlsl-mode
+;; URL: https://github.com/jcaw/hlsl-mode
 ;;
 ;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
 
