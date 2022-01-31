@@ -156,15 +156,17 @@ using the `hlsl-builtin-face'."
     hlsl-mode-map)
   "Keymap for HLSL major mode.")
 
-(defcustom hlsl-browse-url-function 'browse-url
-  "Function used to display HLSL man pages. E.g. browse-url, eww, w3m, etc"
-  :type 'function
-  :group 'hlsl)
+;; (defcustom hlsl-browse-url-function 'browse-url
+;;   "Function used to display HLSL man pages.
 
-(defcustom hlsl-man-pages-base-url "http://www.opengl.org/sdk/docs/man/html/"
-  "Location of GL man pages."
-  :type 'string
-  :group 'hlsl)
+;; E.g. `browse-url', `eww', `w3m', etc."
+;;   :type 'function
+;;   :group 'hlsl)
+
+;; (defcustom hlsl-man-pages-base-url "http://www.opengl.org/sdk/docs/man/html/"
+;;   "Location of GL man pages."
+;;   :type 'string
+;;   :group 'hlsl)
 
 ;;;###autoload
 (progn
