@@ -4,9 +4,9 @@
 ;; Copyright (C) 2011, 2014, 2019 Jim Hourihan
 ;;
 ;; Authors: Xavier.Decoret@imag.fr,
-;; Keywords: languages OpenGL GPU SPIR-V Vulkan
 ;;          Jim Hourihan <jimhourihan ~at~ gmail.com>
 ;;          GitHub user "jcaw"
+;; Keywords: languages HLSL GPU shaders
 ;; Version: 2.4
 ;; X-URL: https://github.com/jcaw/hlsl-mode
 ;;
