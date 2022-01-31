@@ -170,15 +170,16 @@ using the `hlsl-builtin-face'."
 
 ;;;###autoload
 (progn
-  (append auto-mode-alist '(("\\.fx\\'" . hlsl-mode)
-                            ("\\.fxc\\'" . hlsl-mode)
-                            ("\\.fxh\\'" . hlsl-mode)
-                            ("\\.hlsl\\'" . hlsl-mode)
-                            ;; Unity shader formats
-                            ("\\.shader\\'" . hlsl-mode)
-                            ("\\.cginc\\'" . hlsl-mode)
-                            ;; Unity compute shaders are HLSL
-                            ("\\.compute\\'" . hlsl-mode))))
+  (setq auto-mode-alist
+        (append auto-mode-alist '(("\\.fx\\'" . hlsl-mode)
+                                  ("\\.fxc\\'" . hlsl-mode)
+                                  ("\\.fxh\\'" . hlsl-mode)
+                                  ("\\.hlsl\\'" . hlsl-mode)
+                                  ;; Unity shader formats
+                                  ("\\.shader\\'" . hlsl-mode)
+                                  ("\\.cginc\\'" . hlsl-mode)
+                                  ;; Unity compute shaders are HLSL
+                                  ("\\.compute\\'" . hlsl-mode)))))
 
 (eval-and-compile
   (defun hlsl--mixed-case (strings)
