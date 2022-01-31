@@ -480,6 +480,11 @@ duplicates)."
     (cons (eval-when-compile
             (hlsl-ppre hlsl-deprecated-variables-list))
           hlsl-deprecated-variable-name-face)
+    ;; Swizzles are a special case. We want to highlight swizzles only when
+    ;; they're after a dot, but we don't want to highlight the dot itself.
+    (list (eval-when-compile
+            "\\.\\_<\\([xyzw]\\{1,4\\}\\|[rgba]\\{1,4\\}\\)\\_>")
+          '(1 hlsl-builtin-face))
     ;; TODO: What to do about dedicated named variables?
     )
 
