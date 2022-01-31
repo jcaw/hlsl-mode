@@ -578,6 +578,11 @@ duplicates)."
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-padding) "")
   (easy-menu-add hlsl-menu)
+  ;; TODO: Indentation rules for annotated for loops, e.g:
+  ;;     [unroll] for (...) {
+  ;;     --->|
+  ;;     }
+  ;;   Currently it just indents flat as though no scope was declared
   (add-to-list 'align-c++-modes 'hlsl-mode)
   (c-run-mode-hooks 'c-mode-common-hook)
   (run-mode-hooks 'hlsl-mode-hook)
