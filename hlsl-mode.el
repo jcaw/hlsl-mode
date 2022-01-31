@@ -194,42 +194,101 @@ are added to the `hlsl-builtin-list' and are fontified using the
   ;; compile as well. The goal here is to have the byte compiled code
   ;; have optimized regexps so its not done at eval time.
   (defvar hlsl-type-list
-    '("float" "double" "int" "void" "bool" "true" "false" "mat2" "mat3"
-      "mat4" "dmat2" "dmat3" "dmat4" "mat2x2" "mat2x3" "mat2x4" "dmat2x2"
-      "dmat2x3" "dmat2x4" "mat3x2" "mat3x3" "mat3x4" "dmat3x2" "dmat3x3"
-      "dmat3x4" "mat4x2" "mat4x3" "mat4x4" "dmat4x2" "dmat4x3" "dmat4x4" "vec2"
-      "vec3" "vec4" "ivec2" "ivec3" "ivec4" "bvec2" "bvec3" "bvec4" "dvec2"
-      "dvec3" "dvec4" "uint" "uvec2" "uvec3" "uvec4" "atomic_uint"
-      "sampler1D" "sampler2D" "sampler3D" "samplerCube" "sampler1DShadow"
-      "sampler2DShadow" "samplerCubeShadow" "sampler1DArray" "sampler2DArray"
-      "sampler1DArrayShadow" "sampler2DArrayShadow" "isampler1D" "isampler2D"
-      "isampler3D" "isamplerCube" "isampler1DArray" "isampler2DArray"
-      "usampler1D" "usampler2D" "usampler3D" "usamplerCube" "usampler1DArray"
-      "usampler2DArray" "sampler2DRect" "sampler2DRectShadow" "isampler2DRect"
-      "usampler2DRect" "samplerBuffer" "isamplerBuffer" "usamplerBuffer"
-      "sampler2DMS" "isampler2DMS" "usampler2DMS" "sampler2DMSArray"
-      "isampler2DMSArray" "usampler2DMSArray" "samplerCubeArray"
-      "samplerCubeArrayShadow" "isamplerCubeArray" "usamplerCubeArray"
-      "image1D" "iimage1D" "uimage1D" "image2D" "iimage2D" "uimage2D" "image3D"
-      "iimage3D" "uimage3D" "image2DRect" "iimage2DRect" "uimage2DRect"
-      "imageCube" "iimageCube" "uimageCube" "imageBuffer" "iimageBuffer"
-      "uimageBuffer" "image1DArray" "iimage1DArray" "uimage1DArray"
-      "image2DArray" "iimage2DArray" "uimage2DArray" "imageCubeArray"
-      "iimageCubeArray" "uimageCubeArray" "image2DMS" "iimage2DMS" "uimage2DMS"
-      "image2DMSArray" "iimage2DMSArray" "uimage2DMSArray"))
+    `(
+      ;; Scalar types, plus all the vector and matrix expressions for each. E.g:
+      ;; bool, bool1, bool1x2, bool2, bool3x4, etc.
+      ,@(mapcar (lambda (type)
+                  (concat type "\\([1234]\\|\\([1234]x[1234]\\)\\)?"))
+                '("bool" "dword" "int" "uint" "half" "float" "double"
+                  "min16float" "min10float" "min16int" "min12int" "min16uint"))
+
+      "matrix"
+
+      ;; Texture samplers
+      "sampler" "sampler1D" "sampler2D" "sampler3D" "samplerCUBE" "sampler_state"
+      "SamplerState" "SampleComparisonState"
+
+      ;; Buffer-esque types
+      "AppendStructuredBuffer" "Buffer" "ByteAddressBuffer" "ConsumeStructuredBuffer"
+      "InputPatch" "OutputPatch" "RWBuffer" "RWByteAddressBuffer" "RWStructuredBuffer"
+      "RWTexture1D" "RWTexture1DArray" "RWTexture2D" "RWTexture2DArray" "RWTexture3D"
+      "StructuredBuffer" "Texture1D" "Texture1DArray" "Texture2D" "Texture2DArray"
+      "Texture2DMS" "Texture2DMSArray" "Texture3D" "TextureCube" "TextureCubeArray"
+      ;; Rasterizer Order Views
+      "RasterizerOrderedBuffer" "RasterizerOrderedByteAddressBuffer" "RasterizerOrderedStructuredBuffer"
+      "RasterizerOrderedTexture1D" "RasterizerOrderedTexture1DArray" "RasterizerOrderedTexture2D"
+      "RasterizerOrderedTexture2DArray" "RasterizerOrderedTexture3D"
+
+      "Object2"
+
+      "PointStream" "LineStream" "TriangleStream"
+
+
+      ))
 
   (defvar hlsl-qualifier-list
-    '("attribute" "const" "uniform" "varying" "buffer" "shared" "coherent"
-    "volatile" "restrict" "readonly" "writeonly" "layout" "centroid" "flat"
-    "smooth" "noperspective" "patch" "sample" "in" "out" "inout"
-    "invariant" "lowp" "mediump" "highp"))
+    '("snorm" "unorm"
+
+      ;; Taken directly from glsl-mode - not audited yet
+      "attribute" "const" "uniform" "varying" "buffer" "shared" "coherent"
+      "volatile" "restrict" "readonly" "writeonly" "layout" "centroid" "flat"
+      "smooth" "noperspective" "patch" "sample" "in" "out" "inout"
+      "invariant" "lowp" "mediump" "highp"))
 
   (defvar hlsl-keyword-list
-    '("break" "continue" "do" "for" "while" "if" "else" "subroutine"
+    '("true" "false" "NULL" "register" "packoffset" "cbuffer" "tbuffer"
+      "pixelfragment" "vertexfragment"
+      ;; TODO: Maybe move compile_fragment
+      "compile_fragment"
+
+      ;; Attributes
+      "maxvertexcount" "domain" "earlydepthstencil" "instance" "maxtessfactor"
+      "numthreads" "outputcontrolpoints" "outputtopology" "partitioning"
+      "patchconstantfunc"
+
+      ;; Geom shader types
+      "point" "line" "triangle" "lineadj" "triangledj"
+
+      ;; Shader profiles
+      ;;
+      ;; Shader Model 1
+      "vs_1_1"
+      ;; Shader Model 2
+      "ps_2_0" "ps_2_x" "vs_2_0" "vs_2_x" "ps_4_0_level_9_0" "ps_4_0_level_9_1"
+      "ps_4_0_level_9_3" "vs_4_0_level_9_0" "vs_4_0_level_9_1" "vs_4_0_level_9_3"
+      "lib_4_0_level_9_1" "lib_4_0_level_9_"
+      ;; Shader Model 3
+      "ps_3_0" "vs_3_0"
+      ;; Shader Model 4
+      "cs_4_0" "gs_4_0" "ps_4_0" "vs_4_0" "cs_4_1" "gs_4_1" "ps_4_1" "vs_4_1"
+      "lib_4_0" "lib_4_"
+      ;; Shader Model 5
+      "cs_5_0" "ds_5_0" "gs_5_0" "hs_5_0" "ps_5_0" "vs_5_0" "lib_5_"
+      ;; Shader Model 6
+      "cs_6_0" "ds_6_0" "gs_6_0" "hs_6_0" "ps_6_0" "vs_6_0" "lib_6_"
+      ;; FX Profiles
+      "fx_1_0" "fx_2_0" "fx_4_0" "fx_4_1" "fx_5_0"
+
+      ;; Semantics
+      "BINORMAL[0-9]?" "BLENDINDICES[0-9]?" "BLENDWEIGHT[0-9]?" "COLOR[0-9]?"
+      "NORMAL[0-9]?" "POSITION[0-9]?" "POSITIONT" "PSIZE[0-9]?" "TANGENT[0-9]?"
+      "TEXCOORD[0-9]" "FOG" "TESSFACTOR[0-9]?" "VFACE" "VPOS" "DEPTH[0-9]?"
+      "SV_ClipDistance[0-9]?" "SV_CullDistance[0-9]?" "SV_Coverage" "SV_Depth"
+      "SV_DepthGreaterEqual" "SV_DepthLessEqual" "SV_DispatchThreadID"
+      "SV_DomainLocation" "SV_GroupID" "SV_GroupIndex" "SV_GroupThreadID"
+      "SV_GSInstanceID" "SV_InnerCoverage" "SV_InsideTessFactor" "SV_InstanceID"
+      "SV_IsFrontFace" "SV_OutputControlPointID" "SV_Position" "SV_PrimitiveID"
+      "SV_RenderTargetArrayIndex" "SV_SampleIndex" "SV_StencilRef" "SV_Target[0-7]"
+      "SV_TessFactor" "SV_VertexID" "SV_ViewportArrayIndex" "SV_ShadingRate"
+
+      ;; Taken directly from glsl-mode - not audited yet
+      "break" "continue" "do" "for" "while" "if" "else" "subroutine"
       "discard" "return" "precision" "struct" "switch" "default" "case"))
 
   (defvar hlsl-reserved-list
-    '("input" "output" "asm" "class" "union" "enum" "typedef" "template" "this"
+    '(
+      ;; Taken directly from glsl-mode - not audited yet
+      "input" "output" "asm" "class" "union" "enum" "typedef" "template" "this"
       "packed" "resource" "goto" "inline" "noinline"
       "common" "partition" "active" "long" "short" "half" "fixed" "unsigned" "superp"
       "public" "static" "extern" "external" "interface"
@@ -238,69 +297,80 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "sampler3DRect"))
 
   (defvar hlsl-deprecated-qualifier-list
-    '("varying" "attribute")) ; centroid is deprecated when used with varying
+    '())
 
   (defvar hlsl-builtin-list
-    '("abs" "acos" "acosh" "all" "any" "anyInvocation" "allInvocations"
-      "allInvocationsEqual" "asin" "asinh" "atan" "atanh"
-      "atomicAdd" "atomicMin" "atomicMax" "atomicAnd" "atomicOr"
-      "atomicXor" "atomicExchange" "atomicCompSwap"
-      "atomicCounter" "atomicCounterDecrement" "atomicCounterIncrement"
-      "atomicCounterAdd" "atomicCounterSubtract" "atomicCounterMin"
-      "atomicCounterMax" "atomicCounterAnd" "atomicCounterOr"
-      "atomicCounterXor" "atomicCounterExchange" "atomicCounterCompSwap"
-      "barrier" "bitCount" "bitfieldExtract" "bitfieldInsert" "bitfieldReverse"
-      "ceil" "clamp" "cos" "cosh" "cross" "degrees" "determinant" "dFdx" "dFdy"
-      "dFdyFine" "dFdxFine" "dFdyCoarse" "dFdxCoarse" "distance" "dot"
-      "fwidthFine" "fwidthCoarse"
-      "EmitStreamVertex" "EmitStreamPrimitive" "EmitVertex" "EndPrimitive"
-      "EndStreamPrimitive" "equal" "exp" "exp2" "faceforward" "findLSB"
-      "findMSB" "floatBitsToInt" "floatBitsToUint" "floor" "fma" "fract"
-      "frexp" "fwidth" "greaterThan" "greaterThanEqual" "groupMemoryBarrier"
-      "imageAtomicAdd" "imageAtomicAnd" "imageAtomicCompSwap" "imageAtomicExchange"
-      "imageAtomicMax" "imageAtomicMin" "imageAtomicOr" "imageAtomicXor"
-      "imageLoad" "imageSize" "imageStore" "imulExtended" "intBitsToFloat"
-      "imageSamples" "interpolateAtCentroid" "interpolateAtOffset" "interpolateAtSample"
-      "inverse" "inversesqrt" "isinf" "isnan" "ldexp" "length" "lessThan"
-      "lessThanEqual" "log" "log2" "matrixCompMult" "max" "memoryBarrier"
-      "memoryBarrierAtomicCounter" "memoryBarrierBuffer"
-      "memoryBarrierShared" "memoryBarrierImage" "memoryBarrier"
-      "min" "mix" "mod" "modf" "normalize" "not" "notEqual" "outerProduct"
-      "packDouble2x32" "packHalf2x16" "packSnorm2x16" "packSnorm4x8"
-      "packUnorm2x16" "packUnorm4x8" "pow" "radians" "reflect" "refract"
-      "round" "roundEven" "sign" "sin" "sinh" "smoothstep" "sqrt" "step" "tan"
-      "tanh" "texelFetch" "texelFetchOffset" "texture" "textureGather"
-      "textureGatherOffset" "textureGatherOffsets" "textureGrad" "textureSamples"
-      "textureGradOffset" "textureLod" "textureLodOffset" "textureOffset"
-      "textureProj" "textureProjGrad" "textureProjGradOffset" "textureProjLod"
-      "textureProjLodOffset" "textureProjOffset" "textureQueryLevels" "textureQueryLod"
-      "textureSize" "transpose" "trunc" "uaddCarry" "uintBitsToFloat"
-      "umulExtended" "unpackDouble2x32" "unpackHalf2x16" "unpackSnorm2x16"
-      "unpackSnorm4x8" "unpackUnorm2x16" "unpackUnorm4x8" "usubBorrow"))
+
+    '(
+      ;; This is the list of the builtins taken directly from the Direct3D 12 docs (Shader Model 6.0)
+      "abort" "abs" "acos" "all" "AllMemoryBarrier" "AllMemoryBarrierWithGroupSync"
+      "any" "asdouble" "asfloat" "asin" "asint" "asint" "asuint" "asuint" "atan" "atan2"
+      "ceil" "CheckAccessFullyMapped" "clamp" "clip" "cos" "cosh" "countbits" "cross"
+      "D3DCOLORtoUBYTE4" "ddx" "ddx_coarse" "ddx_fine" "ddy" "ddy_coarse" "ddy_fine"
+      "degrees" "determinant" "DeviceMemoryBarrier" "DeviceMemoryBarrierWithGroupSync"
+      "distance" "dot" "dst" "errorf" "EvaluateAttributeAtCentroid" "EvaluateAttributeAtSample"
+      "EvaluateAttributeSnapped" "exp" "exp2" "f16tof32" "f32tof16" "faceforward"
+      "firstbithigh" "firstbitlow" "floor" "fma" "fmod" "frac" "frexp" "fwidth"
+      "GetRenderTargetSampleCount" "GetRenderTargetSamplePosition" "GroupMemoryBarrier"
+      "GroupMemoryBarrierWithGroupSync" "InterlockedAdd" "InterlockedAnd"
+      "InterlockedCompareExchange" "InterlockedCompareStore" "InterlockedExchange"
+      "InterlockedMax" "InterlockedMin" "InterlockedOr" "InterlockedXor" "isfinite"
+      "isinf" "isnan" "ldexp" "length" "lerp" "lit" "log" "log10" "log2" "mad" "max"
+      "min" "modf" "msad4" "mul" "noise" "normalize" "pow" "printf"
+      "Process2DQuadTessFactorsAvg" "Process2DQuadTessFactorsMax" "Process2DQuadTessFactorsMin"
+      "ProcessIsolineTessFactors" "ProcessQuadTessFactorsAvg" "ProcessQuadTessFactorsMax"
+      "ProcessQuadTessFactorsMin" "ProcessTriTessFactorsAvg" "ProcessTriTessFactorsMax"
+      "ProcessTriTessFactorsMin" "radians" "rcp" "reflect" "refract" "reversebits"
+      "round" "rsqrt" "saturate" "sign" "sin" "sincos" "sinh" "smoothstep" "sqrt"
+      "step" "tan" "tanh" "tex1D" "tex1D" "tex1Dbias" "tex1Dgrad" "tex1Dlod" "tex1Dproj"
+      "tex2D" "tex2D" "tex2Dbias" "tex2Dgrad" "tex2Dlod" "tex2Dproj" "tex3D" "tex3D"
+      "tex3Dbias" "tex3Dgrad" "tex3Dlod" "tex3Dproj" "texCUBE" "texCUBE" "texCUBEbias"
+      "texCUBEgrad" "texCUBElod" "texCUBEproj" "transpose" "trunc"
+
+      ;; Other things to consider builtins
+      ;; TODO: Move to keywords?
+      "SetVertexShader" "SetGeometryShader" "SetPixelSader"
+      ;; Buffers
+      "Load[234]?" "Store[234]?"
+      ;; Geometry shader streams
+      "Append" "RestartStrip"
+      ;; Textures/Buffers
+      "CalculateLevelOfDetail" "CalculateLevelOfDetailUnclamped" "Gather" "GetDimensions"
+      "GetSamplePosition" "Sample" "SampleBias" "SampleCmp" "SampleGrad" "SampleLevel"
+      "Operator\\[\\]"
+      "GatherRed" "GatherGreen" "GatherBlue" "GatherAlpha" "GatherCmp" "GatherCmpRed"
+      "GatherCmpGreen" "GatherCmpBlue" "GatherCmpAlpha"
+      "Sample" "SampleBias" "SampleCmp" "SampleCmpLevelZero" "SampleGrad" "SampleLevel"
+      ;; Wave Intrinsics
+      "QuadReadAcrossDiagonal" "QuadReadLaneAt" "QuadReadAcrossX" "QuadReadAcrossY"
+      "WaveActiveAllEqual" "WaveActiveBitAnd" "WaveActiveBitOr" "WaveActiveBitXor"
+      "WaveActiveCountBits" "WaveActiveMax" "WaveActiveMin" "WaveActiveProduct"
+      "WaveActiveSum" "WaveActiveAllTrue" "WaveActiveAnyTrue" "WaveActiveBallot"
+      "WaveGetLaneCount" "WaveGetLaneIndex" "WaveIsFirstLane" "WavePrefixCountBits"
+      "WavePrefixProduct" "WavePrefixSum" "WaveReadLaneFirst" "WaveReadLaneAt"
+      ))
 
   (defvar hlsl-deprecated-builtin-list
-    '("noise1" "noise2" "noise3" "noise4"
-      "texture1D" "texture1DProj" "texture1DLod" "texture1DProjLod"
-      "texture2D" "texture2DProj" "texture2DLod" "texture2DProjLod"
-      "texture2DRect" "texture2DRectProj"
-      "texture3D" "texture3DProj" "texture3DLod" "texture3DProjLod"
-      "shadow1D" "shadow1DProj" "shadow1DLod" "shadow1DProjLod"
-      "shadow2D" "shadow2DProj" "shadow2DLod" "shadow2DProjLod"
-      "textureCube" "textureCubeLod"))
+    '())
 
   (defvar hlsl-deprecated-variables-list
-    '("gl_FragColor" "gl_FragData" "gl_MaxVarying" "gl_MaxVaryingFloats"
-      "gl_MaxVaryingComponents"))
+    '())
 
   (defvar hlsl-preprocessor-directive-list
-    '("define" "undef" "if" "ifdef" "ifndef" "else" "elif" "endif"
+    '(
+      ;; Taken directly from glsl-mode - not audited yet
+      "define" "undef" "if" "ifdef" "ifndef" "else" "elif" "endif"
       "error" "pragma" "extension" "version" "line"))
 
   (defvar hlsl-preprocessor-expr-list
-    '("defined" "##"))
+    '(
+      ;; Taken directly from glsl-mode - not audited yet
+      "defined" "##"))
 
   (defvar hlsl-preprocessor-builtin-list
-    '("__LINE__" "__FILE__" "__VERSION__"))
+    '(
+      ;; Taken directly from glsl-mode - not audited yet
+      "__LINE__" "__FILE__" "__VERSION__"))
 
   ) ; eval-and-compile
 
