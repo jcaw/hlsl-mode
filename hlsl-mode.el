@@ -9,6 +9,7 @@
 ;; Keywords: languages HLSL GPU shaders
 ;; Version: 0.0
 ;; URL: https://github.com/jcaw/hlsl-mode
+;; Package-Requires: ((emacs "26.1"))
 ;;
 ;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
 
