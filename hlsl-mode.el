@@ -443,7 +443,7 @@ duplicates)."
 
 (eval-and-compile
   (defun hlsl-ppre (re)
-    ;; TODO: This doesn't sanitise the inputs, so a bad member could corrupt the whole expression
+    ;; FIXME: This doesn't sanitise the inputs, so a bad member could corrupt the whole expression
     (format "\\<\\(%s\\)\\>" (string-join re "\\|"))))
 
 (defvar hlsl-font-lock-keywords-1
