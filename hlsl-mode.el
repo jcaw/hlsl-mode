@@ -28,18 +28,11 @@
 ;;; Commentary:
 
 ;; Major mode for editing OpenHLSL grammar files, usually files ending with
-;; `.vert', `.frag', `.hlsl', `.geom'.  Is is based on c-mode plus some
+;; `.fx[hc]', `.hlsl', `.shader', `.compute'. It is based on c-mode plus some
 ;; features and pre-specified fontifications.
 ;;
-;; Modifications from the 1.0 version of hlsl-mode (jimhourihan):
-;;  * Removed original optimized regexps for font-lock-keywords and
-;;    replaced with keyword lists for easier maintenance
-;;  * Added customization group and faces
-;;  * Preprocessor faces
-;;  * Updated to HLSL 4.6
-;;  * Separate deprecated symbols
-;;  * Made _ part of a word
-;;  * man page lookup at opengl.org
+;; It is modified from `glsl-mode', maintained at the time of writing by Jim
+;; Hourihan: https://github.com/jimhourihan/glsl-mode
 
 ;; This package provides the following features:
 ;;  * Syntax coloring (via font-lock) for grammar symbols and
@@ -57,10 +50,6 @@
 ;; If hlsl-mode is not part of your distribution, put this file into your
 ;; load-path and the following into your ~/.emacs:
 ;;   (autoload 'hlsl-mode "hlsl-mode" nil t)
-;;   (add-to-list 'auto-mode-alist '("\\.hlsl\\'" . hlsl-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.vert\\'" . hlsl-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.frag\\'" . hlsl-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.geom\\'" . hlsl-mode))
 
 ;; Reference:
 ;; https://www.khronos.org/registry/OpenGL/specs/gl/HLSLangSpec.4.60.pdf
