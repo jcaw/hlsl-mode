@@ -56,7 +56,7 @@
 
 ;;; Code:
 
-(eval-when-compile			; required and optional libraries
+(eval-when-compile                   ; required and optional libraries
   (require 'cc-mode)
   (require 'find-file)
   (require 'subr-x))
@@ -545,7 +545,7 @@ duplicates)."
       ["Comment Out Region"     comment-region
        (c-fn-region-is-active-p)]
       ["Uncomment Region"       (comment-region (region-beginning)
-						(region-end) '(4))
+                                                (region-end) '(4))
        (c-fn-region-is-active-p)]
       ["Indent Expression"      c-indent-exp
        (memq (char-after) '(?\( ?\[ ?\{))]
@@ -582,8 +582,8 @@ duplicates)."
   (c-run-mode-hooks 'c-mode-common-hook)
   (run-mode-hooks 'hlsl-mode-hook)
   :after-hook (progn (c-make-noise-macro-regexps)
-		     (c-make-macro-with-semi-re)
-		     (c-update-modeline))
+                     (c-make-macro-with-semi-re)
+                     (c-update-modeline))
   )
 
 
