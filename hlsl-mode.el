@@ -4,10 +4,11 @@
 ;; Copyright (C) 2011, 2014, 2019 Jim Hourihan
 ;;
 ;; Authors: Xavier.Decoret@imag.fr,
-;;          Jim Hourihan <jimhourihan ~at~ gmail.com> (updated for 4.6, etc)
 ;; Keywords: languages OpenGL GPU SPIR-V Vulkan
+;;          Jim Hourihan <jimhourihan ~at~ gmail.com>
+;;          GitHub user "jcaw"
 ;; Version: 2.4
-;; X-URL: https://github.com/jimhourihan/hlsl-mode
+;; X-URL: https://github.com/jcaw/hlsl-mode
 ;;
 ;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/hlsl-mode/
 
