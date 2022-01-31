@@ -200,7 +200,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
                 '("bool" "dword" "int" "uint" "half" "float" "double"
                   "min16float" "min10float" "min16int" "min12int" "min16uint"))
 
-      "matrix"
+      "matrix" "void"
 
       ;; Texture samplers
       "sampler" "sampler1D" "sampler2D" "sampler3D" "samplerCUBE" "sampler_state"
@@ -278,6 +278,12 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "SV_IsFrontFace" "SV_OutputControlPointID" "SV_Position" "SV_PrimitiveID"
       "SV_RenderTargetArrayIndex" "SV_SampleIndex" "SV_StencilRef" "SV_Target[0-7]"
       "SV_TessFactor" "SV_VertexID" "SV_ViewportArrayIndex" "SV_ShadingRate"
+      "SV_Target"
+
+      ;; Unity keywords
+      ;;
+      ;; TODO: Separate derived mode for Unity ".shader" files? They're not strictly HLSL.
+      "Shader" "Properties" "SubShader" "Tags" "Pass"
 
       ;; Taken directly from glsl-mode - not audited yet
       "break" "continue" "do" "for" "while" "if" "else" "subroutine"
@@ -358,7 +364,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
     '(
       ;; Taken directly from glsl-mode - not audited yet
       "define" "undef" "if" "ifdef" "ifndef" "else" "elif" "endif"
-      "error" "pragma" "extension" "version" "line"))
+      "error" "pragma" "extension" "version" "line" "include"))
 
   (defvar hlsl-preprocessor-expr-list
     '(
