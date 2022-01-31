@@ -64,7 +64,6 @@
 
 (defvar hlsl-mode-menu nil "Menu for HLSL mode")
 
-(defvar hlsl-mode-hook nil "HLSL mode hook")
 
 (defvar hlsl-type-face 'hlsl-type-face)
 (defface hlsl-type-face
@@ -146,8 +145,6 @@ are added to the `hlsl-builtin-list' and are fontified using the
 `hlsl-builtin-face'."
   :type '(repeat (string :tag "Keyword"))
   :group 'hlsl)
-
-(defvar hlsl-mode-hook nil)
 
 (defvar hlsl-mode-map
   (let ((hlsl-mode-map (make-sparse-keymap)))
