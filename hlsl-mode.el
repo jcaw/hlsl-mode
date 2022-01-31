@@ -231,8 +231,7 @@ duplicates)."
       "Object2"
 
       ;; Geometry shader stream outputs
-      "PointStream" "LineStream" "TriangleStream"
-      ))
+      "PointStream" "LineStream" "TriangleStream"))
 
   (defvar hlsl-qualifier-list
     '(
@@ -251,8 +250,7 @@ duplicates)."
       ;; TODO: Remove
       "attribute" "varying" "buffer" "coherent"
       "volatile" "restrict" "readonly" "writeonly" "layout" "flat"
-      "smooth" "noperspective" "patch" "invariant" "lowp" "mediump" "highp"
-      ))
+      "smooth" "noperspective" "patch" "invariant" "lowp" "mediump" "highp"))
 
   (defvar hlsl-keyword-list
     `(
@@ -323,8 +321,7 @@ duplicates)."
       ;; Unity keywords
       ;;
       ;; TODO: Separate derived mode for Unity ".shader" files? They're not strictly HLSL.
-      "Shader" "Properties" "SubShader" "Tags" "Pass" "CGPROGRAM" "ENDCG"
-      ))
+      "Shader" "Properties" "SubShader" "Tags" "Pass" "CGPROGRAM" "ENDCG"))
 
   (defvar hlsl-reserved-list
     '(
@@ -333,12 +330,10 @@ duplicates)."
       "auto" "case" "catch" "char" "class" "const_cast" "default" "delete" "dynamic_cast"
       "enum" "explicit" "friend" "goto" "long" "mutable" "new" "operator" "private"
       "protected" "public" "reinterpret_cast" "short" "signed" "sizeof" "static_cast"
-      "template" "this" "throw" "try" "typename" "union" "unsigned" "using" "virtual"
-      ))
+      "template" "this" "throw" "try" "typename" "union" "unsigned" "using" "virtual"))
 
   (defvar hlsl-deprecated-qualifier-list
-    '(
-      ))
+    '())
 
   (defvar hlsl-builtin-list
 
@@ -394,34 +389,28 @@ duplicates)."
       ;; /\.\(_[1-4]\{2}\)\{1,4\}/
 
       ;; Unsorted
-      "Consume" "DecrementCounter" "IncrementCounter"
-      ))
+      "Consume" "DecrementCounter" "IncrementCounter"))
 
   (defvar hlsl-deprecated-builtin-list
-    '(
-      ))
+    '())
 
   (defvar hlsl-deprecated-variables-list
-    '(
-      ))
+    '())
 
   (defvar hlsl-preprocessor-directive-list
     '(
       "define" "elif" "else" "endif" "error" "if" "ifdef" "ifndef" "include"
-      "line" "pragma" "undef"
-      ))
+      "line" "pragma" "undef"))
 
   (defvar hlsl-preprocessor-expr-list
     '(
       ;; Taken directly from glsl-mode - not audited yet
-      "defined" "##"
-      ))
+      "defined" "##"))
 
   (defvar hlsl-preprocessor-builtin-list
     '(
       ;; Taken directly from glsl-mode - not audited yet
-      "__LINE__" "__FILE__" "__VERSION__"
-      ))
+      "__LINE__" "__FILE__" "__VERSION__"))
 
   ;; TODO: Highlighting for annotations   <int something=27;>
 
@@ -503,10 +492,9 @@ duplicates)."
   "Syntax table for hlsl-mode.")
 
 (defvar hlsl-other-file-alist
-  '(
-    ;; TODO: Add common pairings, e.g. vert & corresponding frag
-    ;;   files, perhaps also geom
-    )
+  ;; TODO: Add common pairings, e.g. vert & corresponding frag files, perhaps
+  ;;   also geom
+  '()
   "Alist of extensions to find given the current file's extension.")
 
 (defun hlsl-man-completion-list ()
@@ -577,8 +565,7 @@ duplicates)."
   (run-mode-hooks 'hlsl-mode-hook)
   :after-hook (progn (c-make-noise-macro-regexps)
                      (c-make-macro-with-semi-re)
-                     (c-update-modeline))
-  )
+                     (c-update-modeline)))
 
 
 ;; TODO: Float number highlighting (i.e. 1.0f)
