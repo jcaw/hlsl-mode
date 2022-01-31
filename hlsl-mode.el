@@ -562,7 +562,6 @@ duplicates)."
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-padding) "")
-  (easy-menu-add hlsl-menu)
   ;; TODO: Indentation rules for annotated for loops, e.g:
   ;;     [unroll] for (...) {
   ;;     --->|
