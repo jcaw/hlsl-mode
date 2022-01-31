@@ -411,7 +411,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
     (cons (eval-when-compile
             (hlsl-ppre hlsl-deprecated-variables-list))
           hlsl-deprecated-variable-name-face)
-    (cons "gl_[A-Z][A-Za-z_]+" hlsl-variable-name-face)
+    ;; TODO: What to do about dedicated named variables?
     )
 
    (when hlsl-additional-types
