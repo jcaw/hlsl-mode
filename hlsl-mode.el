@@ -444,9 +444,7 @@ are added to the `hlsl-builtin-list' and are fontified using the
   "Syntax table for hlsl-mode.")
 
 (defvar hlsl-other-file-alist
-  '(("\\.frag$" (".vert"))
-    ("\\.vert$" (".frag"))
-    )
+  '()
   "Alist of extensions to find given the current file's extension.")
 
 (defun hlsl-man-completion-list ()
