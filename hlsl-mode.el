@@ -7,7 +7,7 @@
 ;;          Jim Hourihan <jimhourihan ~at~ gmail.com>
 ;;          GitHub user "jcaw"
 ;; Keywords: languages HLSL GPU shaders
-;; Version: 2.4
+;; Version: 0.0
 ;; X-URL: https://github.com/jcaw/hlsl-mode
 ;;
 ;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
