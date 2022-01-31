@@ -220,8 +220,6 @@ are added to the `hlsl-builtin-list' and are fontified using the
       "Object2"
 
       "PointStream" "LineStream" "TriangleStream"
-
-
       ))
 
   (defvar hlsl-qualifier-list
