@@ -175,8 +175,9 @@ using the `hlsl-builtin-face'."
                                   ("\\.fxc\\'" . hlsl-mode)
                                   ("\\.fxh\\'" . hlsl-mode)
                                   ("\\.hlsl\\'" . hlsl-mode)
-                                  ;; Unity shader formats
+                                  ;; Unity shader format
                                   ("\\.shader\\'" . hlsl-mode)
+                                  ;; Unity shader include suffix
                                   ("\\.cginc\\'" . hlsl-mode)
                                   ;; Unity compute shaders are HLSL
                                   ("\\.compute\\'" . hlsl-mode)))))
