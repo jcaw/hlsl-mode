@@ -54,7 +54,7 @@
 (require 'align)
 
 (defgroup hlsl nil
-  "Microsoft HLSL Major Mode"
+  "Microsoft HLSL Major Mode."
   :group 'languages)
 
 (defconst hlsl-shader-model-version "6.0"
@@ -63,86 +63,90 @@
 (defconst hlsl-direct3d-version "12"
   "Direct3D language version number.")
 
-(defvar hlsl-mode-menu nil "Menu for HLSL mode")
+(defvar hlsl-mode-menu nil "Menu for HLSL mode.")
 
 (defvar hlsl-type-face 'hlsl-type-face)
 (defface hlsl-type-face
-  '((t (:inherit font-lock-type-face))) "hlsl: type face"
+  '((t (:inherit font-lock-type-face))) "HLSL: type face."
   :group 'hlsl)
 
 (defvar hlsl-builtin-face 'hlsl-builtin-face)
 (defface hlsl-builtin-face
-  '((t (:inherit font-lock-builtin-face))) "hlsl: builtin face"
+  '((t (:inherit font-lock-builtin-face))) "HLSL: builtin face."
   :group 'hlsl)
 
 (defvar hlsl-deprecated-builtin-face 'hlsl-deprecated-builtin-face)
 (defface hlsl-deprecated-builtin-face
-  '((t (:inherit font-lock-warning-face))) "hlsl: deprecated builtin face"
+  '((t (:inherit font-lock-warning-face))) "HLSL: deprecated builtin face."
   :group 'hlsl)
 
 (defvar hlsl-qualifier-face 'hlsl-qualifier-face)
 (defface hlsl-qualifier-face
-  '((t (:inherit font-lock-keyword-face))) "hlsl: qualifier face"
+  '((t (:inherit font-lock-keyword-face))) "HLSL: qualifier face."
   :group 'hlsl)
 
 (defvar hlsl-keyword-face 'hlsl-keyword-face)
 (defface hlsl-keyword-face
-  '((t (:inherit font-lock-keyword-face))) "hlsl: keyword face"
+  '((t (:inherit font-lock-keyword-face))) "HLSL: keyword face."
   :group 'hlsl)
 
 (defvar hlsl-deprecated-keyword-face 'hlsl-deprecated-keyword-face)
 (defface hlsl-deprecated-keyword-face
-  '((t (:inherit font-lock-warning-face))) "hlsl: deprecated keyword face"
+  '((t (:inherit font-lock-warning-face))) "HLSL: deprecated keyword face."
   :group 'hlsl)
 
 (defvar hlsl-variable-name-face 'hlsl-variable-name-face)
 (defface hlsl-variable-name-face
-  '((t (:inherit font-lock-variable-name-face))) "hlsl: variable face"
+  '((t (:inherit font-lock-variable-name-face))) "HLSL: variable face."
   :group 'hlsl)
 
 (defvar hlsl-deprecated-variable-name-face 'hlsl-deprecated-variable-name-face)
 (defface hlsl-deprecated-variable-name-face
-  '((t (:inherit font-lock-warning-face))) "hlsl: deprecated variable face"
+  '((t (:inherit font-lock-warning-face))) "HLSL: deprecated variable face."
   :group 'hlsl)
 
 (defvar hlsl-reserved-keyword-face 'hlsl-reserved-keyword-face)
 (defface hlsl-reserved-keyword-face
-  '((t (:inherit hlsl-keyword-face))) "hlsl: reserved keyword face"
+  '((t (:inherit hlsl-keyword-face))) "HLSL: reserved keyword face."
   :group 'hlsl)
 
 (defvar hlsl-preprocessor-face 'hlsl-preprocessor-face)
 (defface hlsl-preprocessor-face
-  '((t (:inherit font-lock-preprocessor-face))) "hlsl: preprocessor face"
+  '((t (:inherit font-lock-preprocessor-face))) "HLSL: preprocessor face."
   :group 'hlsl)
 
 (defcustom hlsl-additional-types nil
-  "List of additional keywords to be considered types. These are
-added to the `hlsl-type-list' and are fontified using the
-`hlsl-type-face'. Examples of existing types include \"float\", \"vec4\",
-  and \"int\"."
+  "List of additional keywords to be considered types.
+
+These are added to the `hlsl-type-list' and are fontified using
+the `hlsl-type-face'. Examples of existing types include
+\"float\", \"float4\", and \"RWStructuredBuffer\"."
   :type '(repeat (string :tag "Type Name"))
   :group 'hlsl)
 
 (defcustom hlsl-additional-qualifiers nil
-  "List of additional keywords to be considered qualifiers. These
-are added to the `hlsl-qualifier-list' and are fontified using
-the `hlsl-qualifier-face'. Examples of existing qualifiers
+  "List of additional keywords to be considered qualifiers.
+
+These are added to the `hlsl-qualifier-list' and are fontified
+using the `hlsl-qualifier-face'. Examples of existing qualifiers
 include \"const\", \"in\", and \"out\"."
   :type '(repeat (string :tag "Qualifier Name"))
   :group 'hlsl)
 
 (defcustom hlsl-additional-keywords nil
-  "List of additional HLSL keywords. These are added to the
-`hlsl-keyword-list' and are fontified using the
-`hlsl-keyword-face'. Example existing keywords include \"while\",
-\"if\", and \"return\"."
+  "List of additional HLSL keywords.
+
+These are added to the `hlsl-keyword-list' and are fontified
+using the `hlsl-keyword-face'. Example existing keywords include
+\"while\", \"if\", and \"return\"."
   :type '(repeat (string :tag "Keyword"))
   :group 'hlsl)
 
 (defcustom hlsl-additional-built-ins nil
-  "List of additional functions to be considered built-in. These
-are added to the `hlsl-builtin-list' and are fontified using the
-`hlsl-builtin-face'."
+  "List of additional functions to be considered built-in.
+
+These are added to the `hlsl-builtin-list' and are fontified
+using the `hlsl-builtin-face'."
   :type '(repeat (string :tag "Keyword"))
   :group 'hlsl)
 
@@ -489,7 +493,7 @@ duplicates)."
     (modify-syntax-entry ?\n "> b" hlsl-mode-syntax-table)
     (modify-syntax-entry ?_ "w" hlsl-mode-syntax-table)
     hlsl-mode-syntax-table)
-  "Syntax table for hlsl-mode.")
+  "Syntax table for `hlsl-mode'.")
 
 (defvar hlsl-other-file-alist
   ;; TODO: Add common pairings, e.g. vert & corresponding frag files, perhaps
@@ -517,7 +521,7 @@ duplicates)."
 
 ;; TODO: Maybe remove easy menu?
 (easy-menu-define hlsl-menu hlsl-mode-map
-  "HLSL Menu"
+  "HLSL Menu."
   `("HLSL"
     ["Comment Out Region"     comment-region
      (c-fn-region-is-active-p)]
