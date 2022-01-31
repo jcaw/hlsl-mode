@@ -502,7 +502,10 @@ duplicates)."
   "Syntax table for hlsl-mode.")
 
 (defvar hlsl-other-file-alist
-  '()
+  '(
+    ;; TODO: Add common pairings, e.g. vert & corresponding frag
+    ;;   files, perhaps also geom
+    )
   "Alist of extensions to find given the current file's extension.")
 
 (defun hlsl-man-completion-list ()
