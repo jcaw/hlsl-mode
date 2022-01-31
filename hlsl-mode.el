@@ -56,8 +56,6 @@
 
 ;;; Code:
 
-(provide 'hlsl-mode)
-
 (eval-when-compile			; required and optional libraries
   (require 'cc-mode)
   (require 'find-file))
@@ -513,4 +511,6 @@ are added to the `hlsl-builtin-list' and are fontified using the
 		     (c-update-modeline))
   )
 
+
+(provide 'hlsl-mode)
 ;;; hlsl-mode.el ends here
