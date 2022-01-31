@@ -58,7 +58,8 @@
 
 (eval-when-compile			; required and optional libraries
   (require 'cc-mode)
-  (require 'find-file))
+  (require 'find-file)
+  (require 'subr-x))
 
 (require 'align)
 
