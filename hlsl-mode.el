@@ -10,7 +10,7 @@
 ;; Version: 2.4
 ;; X-URL: https://github.com/jcaw/hlsl-mode
 ;;
-;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/hlsl-mode/
+;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
