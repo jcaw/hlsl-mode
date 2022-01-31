@@ -65,14 +65,14 @@
 (require 'align)
 
 (defgroup hlsl nil
-  "OpenGL Shading Language Major Mode"
+  "Microsoft HLSL Major Mode"
   :group 'languages)
 
-(defconst hlsl-language-version "5.0"
-  "HLSL language version number.")
+(defconst hlsl-direct3d-version "12"
+  "Direct3D language version number.")
 
-(defconst hlsl-version "5.0"
-  "OpenGL major mode version number.")
+(defconst hlsl-shader-model-version "6.0"
+  "Shader model version number.")
 
 (defvar hlsl-mode-menu nil "Menu for HLSL mode")
 
