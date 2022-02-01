@@ -247,13 +247,7 @@ duplicates)."
       ;; Geom shader primitives
       "point" "line" "triangle" "lineadj" "triangledj"
 
-      "pixelfragment" "vertexfragment"
-
-      ;; Taken directly from glsl-mode - not audited yet
-      ;; TODO: Remove
-      "attribute" "varying" "buffer" "coherent"
-      "volatile" "restrict" "readonly" "writeonly" "layout" "flat"
-      "smooth" "noperspective" "patch" "invariant" "lowp" "mediump" "highp"))
+      "pixelfragment" "vertexfragment"))
 
   (defvar hlsl-keyword-list
     `(
