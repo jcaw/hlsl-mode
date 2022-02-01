@@ -7,7 +7,7 @@
 ;;          Jim Hourihan <jimhourihan ~at~ gmail.com>
 ;;          GitHub user "jcaw"
 ;; Keywords: languages HLSL GPU shaders
-;; Version: 1.1.0
+;; Version: 1.1.1
 ;; URL: https://github.com/jcaw/hlsl-mode
 ;; Package-Requires: ((emacs "24.4"))
 ;;
