@@ -11,7 +11,7 @@
 ;; URL: https://github.com/jcaw/hlsl-mode
 ;; Package-Requires: ((emacs "24.4"))
 ;;
-;; Original X-URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
+;; Original URL http://artis.inrialpes.fr/~Xavier.Decoret/resources/glsl-mode/
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@
 ;;    builtin functions and variables for HLSL (up to the version specified
 ;;    by `hlsl-shader-model-version')
 ;;  * Indentation for the current line (TAB) and selected region (C-M-\).
-
-;; Reference:
-;; https://www.khronos.org/registry/OpenGL/specs/gl/HLSLangSpec.4.60.pdf
 
 ;;; Code:
 
