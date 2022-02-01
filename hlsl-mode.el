@@ -44,10 +44,10 @@
 ;;; Code:
 
 (eval-when-compile                   ; required and optional libraries
-  (require 'cc-mode)
   (require 'find-file)
   (require 'subr-x))
 
+(require 'cc-mode)
 (require 'align)
 
 (defgroup hlsl nil
