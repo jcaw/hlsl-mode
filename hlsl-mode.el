@@ -181,8 +181,11 @@ using the `hlsl-builtin-face'."
   (defun hlsl--mixed-case (strings)
     "Get original `strings', plus lowercase and uppercase versions.
 
-Also returns a flat capitalized version, e.g:
-  \"TexCoord\" -> \"Texcoord\"
+For example:
+
+  (hlsl--mixed-case '(\"TexCoord\" \"POSITION\"))
+      -> '(\"TexCoord\" \"TEXCOORD\" \"Texcoord\"
+           \"POSITION\" \"Position\")
 
 Returns a flattened list of all the resultant strings (without
 duplicates)."
@@ -190,8 +193,7 @@ duplicates)."
                               (if (= 0 (length s))
                                   s
                                 (delete-dups
-                                 (list s (downcase s) (upcase s)
-                                       ;;
+                                 (list s (upcase s)
                                        (concat (upcase (substring s 0 1))
                                                (downcase (substring s 1)))))))
                             strings)))
