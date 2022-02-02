@@ -381,12 +381,6 @@ duplicates)."
       "WaveGetLaneCount" "WaveGetLaneIndex" "WaveIsFirstLane" "WavePrefixCountBits"
       "WavePrefixProduct" "WavePrefixSum" "WaveReadLaneFirst" "WaveReadLaneAt"
 
-      ;; Render swizzles as though they are named builtins
-      "[xyzw]\\{1,4\\}" "[rgba]\\{1,4\\}"
-      ;; TODO: Maybe these types of swizzles?
-      ;; /\.\(_m[0-3]\{2}\)\{1,4\}/
-      ;; /\.\(_[1-4]\{2}\)\{1,4\}/
-
       ;; Unsorted
       "Consume" "DecrementCounter" "IncrementCounter"))
 
@@ -457,6 +451,9 @@ duplicates)."
     ;; Swizzles are a special case. We want to highlight swizzles only when
     ;; they're after a dot, but we don't want to highlight the dot itself.
     (list (eval-when-compile
+            ;; TODO: Maybe these types of swizzles?
+            ;; /\.\(_m[0-3]\{2}\)\{1,4\}/
+            ;; /\.\(_[1-4]\{2}\)\{1,4\}/
             "\\.\\_<\\([xyzw]\\{1,4\\}\\|[rgba]\\{1,4\\}\\)\\_>")
           '(1 hlsl-builtin-face))
     ;; TODO: What to do about dedicated named variables?
