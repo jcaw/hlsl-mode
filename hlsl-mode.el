@@ -572,6 +572,8 @@ duplicates)."
 
 
 ;; TODO: Float number highlighting (i.e. 1.0f)
+;; TODO: Negative number highlighting
+;; TODO: Highlight numbers adjacent to operators e.g. 1-variable
 
 
 (provide 'hlsl-mode)
