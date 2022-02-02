@@ -244,7 +244,7 @@ duplicates)."
       "snorm" "unorm" "in" "inline" "inout" "precise" "extern" "nointerpolation"
       "precise" "shared" "groupshared" "static" "uniform" "volatile" "const"
       "row_major" "column_major" "export" "linear" "centroid" "noperspective"
-      "sample" "globallycoherent"
+      "sample" "globallycoherent" "out"
 
       ;; Geom shader primitives
       "point" "line" "triangle" "lineadj" "triangledj"
