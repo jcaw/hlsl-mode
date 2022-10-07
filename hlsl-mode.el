@@ -172,6 +172,12 @@ using the `hlsl-builtin-face'."
   (add-to-list 'auto-mode-alist '("\\.fxh\\'" . hlsl-mode))
   (add-to-list 'auto-mode-alist '("\\.hlsl\\'" . hlsl-mode))
   (add-to-list 'auto-mode-alist '("\\.cg\\'" . hlsl-mode))
+  ;; Unity shader format
+  (add-to-list 'auto-mode-alist '("\\.shader\\'" . hlsl-mode))
+  ;; Unity shader include suffix
+  (add-to-list 'auto-mode-alist '("\\.cginc\\'" . hlsl-mode))
+  ;; Unity compute shaders are HLSL
+  (add-to-list 'auto-mode-alist '("\\.compute\\'" . hlsl-mode))
   )
 
 (eval-and-compile
@@ -454,6 +460,7 @@ duplicates)."
             "\\.\\_<\\([xyzw]\\{1,4\\}\\|[rgba]\\{1,4\\}\\)\\_>")
           '(1 hlsl-builtin-face))
     ;; TODO: What to do about dedicated named variables?
+    ;; (cons "unity_[A-Z0-9a-z_]+" hlsl-variable-name-face)
     )
 
    (when hlsl-additional-types
