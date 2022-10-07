@@ -2,6 +2,7 @@
 
 ;; Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
 ;; Copyright (C) 2011, 2014, 2019 Jim Hourihan
+;; Copyright (C) 2022 Jcaw
 ;;
 ;; Authors: Xavier.Decoret@imag.fr,
 ;;          Jim Hourihan <jimhourihan ~at~ gmail.com>
