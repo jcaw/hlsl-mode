@@ -50,6 +50,7 @@
   (require 'find-file)
   (require 'subr-x))
 
+(require 'cc-mode)
 (require 'align)
 
 (defgroup hlsl nil
